@@ -1,0 +1,15 @@
+package org.spring.ukmacritic.dto;
+
+import lombok.Builder;
+
+@Builder
+public record UserUpsertDto(
+        String email,
+        String password,
+        String login,
+        String name,
+        boolean state
+) {
+
+
+}

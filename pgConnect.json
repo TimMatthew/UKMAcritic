@@ -1,0 +1,13 @@
+{
+    "Servers": {
+        "1": {
+            "Name": "UKMACRITIC_CONNECTION",
+            "Group": "GROUP_UKMACRITIC",
+            "Host": "ukacritic-ukmacritic.j.aivencloud.com",
+            "Port": 11132,
+            "MaintenanceDB": "defaultdb",
+            "Username": "avnadmin",
+            "SSLMode": "require"
+        }
+    }
+}
