@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.spring.ukmacritic.dto.UserCreateDto;
 import org.spring.ukmacritic.dto.UserTestDto;
+import org.spring.ukmacritic.dto.UserUpsertDto;
 import org.spring.ukmacritic.services.UserService;
 
 import java.util.List;
@@ -26,14 +27,14 @@ class UserControllerMockTests {
     @Test
     void createUser_ShouldReturnUuid() {
         UUID id = UUID.randomUUID();
-        when(userService.createUser(any(UserCreateDto.class))).thenReturn(id);
+        when(userService.create(any(UserUpsertDto.class))).thenReturn(id);
 
-        UUID result = userController.create(new UserCreateDto(
+        UUID result = userController.create(new UserUpsertDto(
                 "alice@mail.com", "1234", "alice",
                 "Alice Smith", false));
 
         assertThat(result).isEqualTo(id);
-        verify(userService).createUser(any(UserCreateDto.class));
+        verify(userService).create(any(UserUpsertDto.class));
     }
 
     @Test
@@ -48,7 +49,7 @@ class UserControllerMockTests {
                         "Anna May", false
                 )
         );
-        when(userService.getAllUsers()).thenReturn(users);
+        when(userService.getAll()).thenReturn(users);
 
         List<UserTestDto> result = userController.getAllUsers();
 
@@ -56,17 +57,17 @@ class UserControllerMockTests {
                 .extracting("login")
                 .containsExactly("alice", "anna_may");
 
-        verify(userService).getAllUsers();
+        verify(userService).getAll();
     }
 
     @Test
     void createUser_ShouldCallServiceOnce() {
         UUID id = UUID.randomUUID();
-        when(userService.createUser(any(UserCreateDto.class))).thenReturn(id);
+        when(userService.create(any(UserUpsertDto.class))).thenReturn(id);
 
-        userController.create(new UserCreateDto("x@mail.com", "pwd", "x", "X User", false));
-        userController.create(new UserCreateDto("y@mail.com", "pwd", "y", "Y User", false));
+        userController.create(new UserUpsertDto("x@mail.com", "pwd", "x", "X User", false));
+        userController.create(new UserUpsertDto("y@mail.com", "pwd", "y", "Y User", false));
 
-        verify(userService, times(2)).createUser(any(UserCreateDto.class));
+        verify(userService, times(2)).create(any(UserUpsertDto.class));
     }
 }
