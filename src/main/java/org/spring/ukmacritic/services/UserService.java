@@ -1,9 +1,7 @@
 package org.spring.ukmacritic.services;
 
-
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.spring.ukmacritic.dto.UserCreateDto;
+import org.spring.ukmacritic.dto.UserResponseDto;
 import org.spring.ukmacritic.dto.UserTestDto;
 import org.spring.ukmacritic.dto.UserUpsertDto;
 import org.spring.ukmacritic.entities.User;
@@ -13,13 +11,13 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepo userRepo;
 
-    public UUID createUser(UserCreateDto user){
+    public UUID create(UserUpsertDto user){
 
         var userEntity = User.builder()
                 .email(user.email())
@@ -35,19 +33,36 @@ public class UserService {
 
     }
 
-
-
-    public List<UserTestDto> getAllUsers(){
+    public List<UserTestDto> getAll(){
         return userRepo.findAll().stream()
                 .map(this::userEntityToTestDTO)
                 .toList();
     }
 
-    public UserTestDto getUser(UUID userId){
+    public UserResponseDto get(UUID userId){
         var user = userRepo.findById(userId).orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " is not found"));
 
-        return userEntityToTestDTO(user);
+        return userEntityToResponseDTO(user);
     }
+
+    public UserUpsertDto update(UUID id, UserUpsertDto dto){
+        var user = userRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("User with id " + id + " is not found"));
+
+        user.setPassword(dto.password());
+        user.setName(dto.name());
+        user.setLogin(dto.login());
+
+        userRepo.saveAndFlush(user);
+        return userEntityToUpsertDTO(user);
+    }
+
+    public boolean delete(UUID id){
+        var user = userRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("User with id " + id + " is not found"));
+        userRepo.delete(user);
+        return true;
+    }
+
+    // --------------------------- HELPERS ---------------------------
 
     private UserTestDto userEntityToTestDTO(User u){
         return UserTestDto.builder()
@@ -58,6 +73,22 @@ public class UserService {
                 .name(u.getName())
                 .state(u.isState())
                 .build();
+    }
 
+    private UserResponseDto userEntityToResponseDTO(User u){
+        return UserResponseDto.builder()
+                .userId(u.getUserId())
+                .login(u.getLogin())
+                .userName(u.getName())
+                .state(u.isState())
+                .build();
+    }
+
+    private UserUpsertDto userEntityToUpsertDTO(User u){
+        return UserUpsertDto.builder()
+                .password(u.getPassword())
+                .login(u.getLogin())
+                .name(u.getName())
+                .build();
     }
 }

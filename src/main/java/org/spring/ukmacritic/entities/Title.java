@@ -49,4 +49,7 @@ public class Title {
 
     @Column(name = "rating")
     private byte rating;
+
+    @Column(name = "id_tmdb")
+    private int idTmdb;
 }

@@ -4,9 +4,11 @@ import lombok.Builder;
 
 @Builder
 public record UserUpsertDto(
+        String email,
         String password,
         String login,
-        String name
+        String name,
+        boolean state
 ) {
 
 
