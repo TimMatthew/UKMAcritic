@@ -1,75 +1,52 @@
 package org.spring.ukmacritic.entities;
 
-import com.vladmihalcea.hibernate.type.array.ListArrayType;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.Type;
+import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Builder
+@Table(name = "title")
 @Getter
 @Setter
-@Table(name = "title")
-@RequiredArgsConstructor
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Title {
 
     @Id
     @GeneratedValue
-    @Column(name = "title_id")
+    @Column(name = "title_id", nullable = false)
     private UUID titleId;
 
-    @Type(ListArrayType.class)
-    @Column(
-            name = "directors",
-            columnDefinition = "text[]"
-    )
-    private ArrayList<String> directors;
+    @JdbcTypeCode(SqlTypes.ARRAY)
+    @Column(name = "directors", columnDefinition = "text[]")
+    private List<String> directors;
 
-    @Type(ListArrayType.class)
-    @Column(
-            name = "genres",
-            columnDefinition = "text[]",
-            nullable = false
-    )
-    private ArrayList<String> genres;
+    @JdbcTypeCode(SqlTypes.ARRAY)
+    @Column(name = "genres", columnDefinition = "text[]", nullable = false)
+    private List<String> genres;
 
-    @Type(ListArrayType.class)
-    @Column(
-            name = "actors",
-            columnDefinition = "text[]"
-    )
-    private ArrayList<String> actors;
+    @JdbcTypeCode(SqlTypes.ARRAY)
+    @Column(name = "actors", columnDefinition = "text[]")
+    private List<String> actors;
 
-    @Type(ListArrayType.class)
-    @Column(
-            name = "regions",
-            columnDefinition = "text[]"
-    )
-    private ArrayList<String> regions;
+    @JdbcTypeCode(SqlTypes.ARRAY)
+    @Column(name = "regions", columnDefinition = "text[]")
+    private List<String> regions;
 
-    @Column(
-            name = "title_name",
-            nullable = false,
-            columnDefinition = "character varying"
-    )
+    @Column(name = "title_name", nullable = false, columnDefinition = "varchar")
     private String titleName;
 
-    @Column(
-            name = "overview",
-            columnDefinition = "text"
-    )
+    @Column(name = "overview", columnDefinition = "text")
     private String overview;
 
-    @Column(name="release_year")
+    @Column(name = "release_year")
     private short releaseYear;
 
-    @Column(name="rating")
+    @Column(name = "rating")
     private byte rating;
 }
