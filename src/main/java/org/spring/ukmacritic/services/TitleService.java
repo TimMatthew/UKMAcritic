@@ -1,8 +1,8 @@
 package org.spring.ukmacritic.services;
 
 import lombok.RequiredArgsConstructor;
-import org.spring.ukmacritic.dto.TitleResponseDto;
-import org.spring.ukmacritic.dto.TitleUpsertDto;
+import org.spring.ukmacritic.dto.title.TitleResponseDto;
+import org.spring.ukmacritic.dto.title.TitleUpsertDto;
 import org.spring.ukmacritic.entities.Title;
 import org.spring.ukmacritic.repos.TitleRepo;
 import org.springframework.stereotype.Service;

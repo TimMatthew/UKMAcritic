@@ -31,7 +31,7 @@ public class Comment {
     private OffsetDateTime creationDate;
 
     @Column(name = "rating", nullable = false)
-    private short rating;
+    private byte rating;
 
     @Column(name = "info", columnDefinition = "text")
     private String info;
