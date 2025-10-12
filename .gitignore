@@ -33,4 +33,7 @@ build/
 .vscode/
 
 .env
+ukma-critic-frontend/.env
+ukma-critic-frontend/node_modules
+ukma-critic-frontend/.idea
 
