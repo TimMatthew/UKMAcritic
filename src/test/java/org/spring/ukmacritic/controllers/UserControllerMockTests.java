@@ -6,9 +6,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.spring.ukmacritic.dto.UserCreateDto;
+import org.spring.ukmacritic.dto.UserResponseDto;
 import org.spring.ukmacritic.dto.UserTestDto;
 import org.spring.ukmacritic.dto.UserUpsertDto;
 import org.spring.ukmacritic.services.UserService;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.UUID;
@@ -69,5 +71,29 @@ class UserControllerMockTests {
         userController.create(new UserUpsertDto("y@mail.com", "pwd", "y", "Y User", false));
 
         verify(userService, times(2)).create(any(UserUpsertDto.class));
+    }
+
+    @Test
+    void updateUser_ShouldCallServiceWithCorrectArgs() {
+        UUID id = UUID.randomUUID();
+        UserUpsertDto dto = new UserUpsertDto(
+                "updated@mail.com",
+                "newpass",
+                "updatedLogin",
+                "Updated User",
+                true
+        );
+        userController.update(id, dto);
+        verify(userService, times(1)).update(eq(id), eq(dto));
+    }
+
+    @Test
+    void deleteUser_ShouldReturnNoContent() {
+        UUID id = UUID.randomUUID();
+
+        boolean response = userController.delete(id);
+
+        assertThat(response).isEqualTo(false); // because there is no user with this id to delete
+        verify(userService).delete(eq(id));
     }
 }
