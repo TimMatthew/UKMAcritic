@@ -5,9 +5,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.spring.ukmacritic.dto.UserCreateDto;
-import org.spring.ukmacritic.dto.UserTestDto;
-import org.spring.ukmacritic.dto.UserUpsertDto;
+import org.spring.ukmacritic.dto.user.UserCreateDto;
+import org.spring.ukmacritic.dto.user.UserTestDto;
+import org.spring.ukmacritic.dto.user.UserUpdateDto;
 import org.spring.ukmacritic.services.UserService;
 
 import java.util.List;
@@ -27,14 +27,14 @@ class UserControllerMockTests {
     @Test
     void createUser_ShouldReturnUuid() {
         UUID id = UUID.randomUUID();
-        when(userService.create(any(UserUpsertDto.class))).thenReturn(id);
+        when(userService.create(any(UserCreateDto.class))).thenReturn(id);
 
-        UUID result = userController.create(new UserUpsertDto(
-                "alice@mail.com", "1234", "alice",
+        UUID result = userController.create(new UserCreateDto(
+                "alice@mail.com", "pwd","alice",
                 "Alice Smith", false));
 
         assertThat(result).isEqualTo(id);
-        verify(userService).create(any(UserUpsertDto.class));
+        verify(userService).create(any(UserCreateDto.class));
     }
 
     @Test
@@ -63,11 +63,32 @@ class UserControllerMockTests {
     @Test
     void createUser_ShouldCallServiceOnce() {
         UUID id = UUID.randomUUID();
-        when(userService.create(any(UserUpsertDto.class))).thenReturn(id);
+        when(userService.create(any(UserCreateDto.class))).thenReturn(id);
 
-        userController.create(new UserUpsertDto("x@mail.com", "pwd", "x", "X User", false));
-        userController.create(new UserUpsertDto("y@mail.com", "pwd", "y", "Y User", false));
+        userController.create(new UserCreateDto("x@mail.com", "pwd", "x", "X User", false));
+        userController.create(new UserCreateDto("y@mail.com","pwd", "y", "Y User", false));
 
-        verify(userService, times(2)).create(any(UserUpsertDto.class));
+        verify(userService, times(2)).create(any(UserCreateDto.class));
+    }
+
+    @Test
+    void updateUser_ShouldCallServiceWithCorrectArgs() {
+        UUID id = UUID.randomUUID();
+        UserUpdateDto dto = new UserUpdateDto(
+                "updated@mail.com",
+                "updatedLogin"
+        );
+        userController.update(id, dto);
+        verify(userService, times(1)).update(eq(id), eq(dto));
+    }
+
+    @Test
+    void deleteUser_ShouldReturnNoContent() {
+        UUID id = UUID.randomUUID();
+
+        boolean response = userController.delete(id);
+
+        assertThat(response).isEqualTo(false); // because there is no user with this id to delete
+        verify(userService).delete(eq(id));
     }
 }

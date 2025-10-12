@@ -1,16 +1,17 @@
 package org.spring.ukmacritic.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.spring.ukmacritic.dto.UserTestDto;
-import org.spring.ukmacritic.dto.UserUpsertDto;
-import org.spring.ukmacritic.dto.UserResponseDto;
+import org.spring.ukmacritic.dto.user.UserCreateDto;
+import org.spring.ukmacritic.dto.user.UserTestDto;
+import org.spring.ukmacritic.dto.user.UserUpdateDto;
+import org.spring.ukmacritic.dto.user.UserResponseDto;
 import org.spring.ukmacritic.services.UserService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
-
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("users")
 @RequiredArgsConstructor
@@ -19,7 +20,7 @@ public class UserController {
     private final UserService us;
 
     @PostMapping()
-    public UUID create(@RequestBody UserUpsertDto user){
+    public UUID create(@RequestBody UserCreateDto user){
         return us.create(user);
     }
 
@@ -34,7 +35,7 @@ public class UserController {
     }
 
     @PutMapping("{id}")
-    public UserUpsertDto update(@PathVariable UUID id, @RequestBody UserUpsertDto dto){
+    public UserResponseDto update(@PathVariable UUID id, @RequestBody UserUpdateDto dto){
         return us.update(id, dto);
     }
 

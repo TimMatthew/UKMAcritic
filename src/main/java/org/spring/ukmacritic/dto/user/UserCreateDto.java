@@ -1,9 +1,10 @@
-package org.spring.ukmacritic.dto;
+package org.spring.ukmacritic.dto.user;
 
 import lombok.Builder;
 
 @Builder
-public record UserUpsertDto(
+public record UserCreateDto(
+
         String email,
         String password,
         String login,

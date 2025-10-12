@@ -1,8 +1,7 @@
 package org.spring.ukmacritic.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.spring.ukmacritic.dto.TitleResponseDto;
-import org.spring.ukmacritic.dto.TitleUpsertDto;
+import org.spring.ukmacritic.dto.title.TitleUpsertDto;
 import org.spring.ukmacritic.services.TitleService;
 import org.springframework.web.bind.annotation.*;
 

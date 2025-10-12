@@ -1,9 +1,10 @@
 package org.spring.ukmacritic.services;
 
 import lombok.RequiredArgsConstructor;
-import org.spring.ukmacritic.dto.UserResponseDto;
-import org.spring.ukmacritic.dto.UserTestDto;
-import org.spring.ukmacritic.dto.UserUpsertDto;
+import org.spring.ukmacritic.dto.user.UserCreateDto;
+import org.spring.ukmacritic.dto.user.UserResponseDto;
+import org.spring.ukmacritic.dto.user.UserTestDto;
+import org.spring.ukmacritic.dto.user.UserUpdateDto;
 import org.spring.ukmacritic.entities.User;
 import org.spring.ukmacritic.repos.UserRepo;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ public class UserService {
 
     private final UserRepo userRepo;
 
-    public UUID create(UserUpsertDto user){
+    public UUID create(UserCreateDto user){
 
         var userEntity = User.builder()
                 .email(user.email())
@@ -45,15 +46,18 @@ public class UserService {
         return userEntityToResponseDTO(user);
     }
 
-    public UserUpsertDto update(UUID id, UserUpsertDto dto){
+    public UserResponseDto update(UUID id, UserUpdateDto dto){
         var user = userRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("User with id " + id + " is not found"));
 
-        user.setPassword(dto.password());
         user.setName(dto.name());
         user.setLogin(dto.login());
 
         userRepo.saveAndFlush(user);
-        return userEntityToUpsertDTO(user);
+        return userEntityToResponseDTO(user);
+    }
+
+    public UserUpdateDto changePassword(UUID id, String pwd){
+        return null;
     }
 
     public boolean delete(UUID id){
@@ -84,11 +88,10 @@ public class UserService {
                 .build();
     }
 
-    private UserUpsertDto userEntityToUpsertDTO(User u){
-        return UserUpsertDto.builder()
-                .password(u.getPassword())
-                .login(u.getLogin())
-                .name(u.getName())
-                .build();
-    }
+//    private UserUpdateDto userEntityToUpdateDTO(User u){
+//        return UserUpdateDto.builder()
+//                .login(u.getLogin())
+//                .name(u.getName())
+//                .build();
+//    }
 }
