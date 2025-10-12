@@ -1,4 +1,4 @@
-package org.spring.ukmacritic.dto;
+package org.spring.ukmacritic.dto.title;
 
 import lombok.Builder;
 

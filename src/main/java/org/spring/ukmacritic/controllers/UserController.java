@@ -1,9 +1,9 @@
 package org.spring.ukmacritic.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.spring.ukmacritic.dto.UserTestDto;
-import org.spring.ukmacritic.dto.UserUpsertDto;
-import org.spring.ukmacritic.dto.UserResponseDto;
+import org.spring.ukmacritic.dto.user.UserTestDto;
+import org.spring.ukmacritic.dto.user.UserUpsertDto;
+import org.spring.ukmacritic.dto.user.UserResponseDto;
 import org.spring.ukmacritic.services.UserService;
 import org.springframework.web.bind.annotation.*;
 

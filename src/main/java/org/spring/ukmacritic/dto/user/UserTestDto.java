@@ -1,10 +1,14 @@
-package org.spring.ukmacritic.dto;
+package org.spring.ukmacritic.dto.user;
 
 import lombok.Builder;
+import org.spring.ukmacritic.entities.User;
+
+import java.util.UUID;
 
 @Builder
-public record UserCreateDto(
+public record UserTestDto(
 
+        UUID id,
         String email,
         String password,
         String login,
