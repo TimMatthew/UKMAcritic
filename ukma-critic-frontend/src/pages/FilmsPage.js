@@ -1,18 +1,13 @@
 import React from "react";
 import {Link} from "react-router-dom";
 
-export default function HomePage () {
+export default function FilmsPage() {
     return (
         <div style={{display: 'flex', flexDirection: 'row', gap: '10px', justifyContent: 'center'}}>
-            <Link type="button" to={`/users`}
-                  className="btn btn-primary"
-                  style={{backgroundColor: 'white', color: 'green', borderColor: 'green'}}
-            >Users</Link>
-
-            <Link type="button" to={`/films`}
+            <Link type="button" to={`/films/add`}
                   className="btn btn-primary"
                   style={{backgroundColor: 'white', color: 'blue', borderColor: 'blue'}}
-            >Films</Link>
+            >Add films page</Link>
         </div>
     )
 }

@@ -1,4 +1,5 @@
 import React from "react";
+import {Link} from "react-router-dom";
 
 // !to_change when styling
 // style={{color: '#442d1c'}}
@@ -12,7 +13,7 @@ export default function Navbar () {
         <div style={{color: '#442d1c'}}>
             <nav className="navbar navbar-expand-lg bg-body-tertiary">
                 <div className="container-fluid">
-                    <a className="navbar-brand" href="#">UkmaCritic</a>
+                    <Link className="navbar-brand" to={`/`}>UkmaCritic</Link>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
                             data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
