@@ -100,10 +100,7 @@ export default function UsersPage () {
 
                                     <Link className="btn mx-2"
                                           to={`/users/update_user/${user.id}`}
-                                          style={{backgroundColor: 'white', color: 'blue', borderColor: 'blue'}}
-                                          onClick={() => {
-                                              console.log('User %o \'s info will be updated by this button', user.name)
-                                          }}>
+                                          style={{backgroundColor: 'white', color: 'blue', borderColor: 'blue'}}>
                                         Update
                                     </Link>
                                     <button className="btn mx-2"
@@ -121,6 +118,14 @@ export default function UsersPage () {
                     </tbody>
                 </table>
             </div>
+            <Link className="btn mx-2"
+                  to={`/users/update_user/$s}`}
+                  style={{backgroundColor: 'white', color: 'green', borderColor: 'green'}}
+                  onClick={() => {
+                      console.log('User will be created by this button')
+                  }}>
+                Create new user
+            </Link>
         </div>
     )
 }
