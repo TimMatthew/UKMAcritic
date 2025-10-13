@@ -3,7 +3,7 @@ package org.spring.ukmacritic.dto.user;
 import lombok.Builder;
 
 @Builder
-public record UserCreateDto(
+public record UserRegisterDto(
 
         String email,
         String password,
