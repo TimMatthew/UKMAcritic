@@ -86,9 +86,7 @@ export default function UsersPage () {
                                 </td>
                                 <td style={{textAlign: 'left'}}>{user.login}</td>
                                 <td className="align-middle">
-                                    <span className="badge rounded-pill d-inline" style={{backgroundColor: "#92a377"}}>
-                                      {user.state ? 'manager' : 'client'}
-                                    </span>
+                                    {user.state ? 'manager' : 'client'}
                                 </td>
                                 <td>
                                     {/* !to_change STYLE WILL BE CHANGED */}
@@ -110,6 +108,16 @@ export default function UsersPage () {
                                             }}>
                                         Delete
                                     </button>
+
+                                    { user.state === false &&
+                                        <button className="btn mx-2"
+                                                style={{backgroundColor: 'white', color: 'green', borderColor: 'green'}}
+                                                onClick={() => {
+                                                    // !to_change add see comments history
+                                                }}>
+                                            See comments history
+                                        </button>
+                                    }
                                 </td>
                             </tr>
 
@@ -118,6 +126,7 @@ export default function UsersPage () {
                     </tbody>
                 </table>
             </div>
+            {/* !to_change decide whether manager will have the possibility to create new users */}
             <Link className="btn mx-2"
                   to={`/users/update_user/$s}`}
                   style={{backgroundColor: 'white', color: 'green', borderColor: 'green'}}
