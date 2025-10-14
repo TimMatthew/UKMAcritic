@@ -44,13 +44,18 @@ public class CommentController {
 
 
     @PutMapping("{id}")
-    public CommentResponseDto update(@PathVariable UUID id, @RequestBody CommentUpdateDto dto){
-        return cs.update(id, dto);
+    public CommentResponseDto update(@PathVariable UUID id, @RequestBody CommentUpdateDto dto, @CookieValue(name="jwt") String jwtToken){
+        return cs.update(id, dto, jwtToken);
     }
 
     @DeleteMapping("{comment}/{manager}")
     public boolean delete(@PathVariable UUID comment, @PathVariable UUID manager, @CookieValue(name="jwt") String jwtToken){
         return cs.delete(comment, manager, jwtToken);
+    }
+
+    @DeleteMapping("{comment}/{user}")
+    public boolean remove(@PathVariable UUID comment, @PathVariable UUID user, @CookieValue(name="jwt") String jwtToken){
+        return cs.remove(comment, user, jwtToken);
     }
 
 

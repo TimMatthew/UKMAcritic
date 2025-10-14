@@ -12,6 +12,7 @@ import org.spring.ukmacritic.repos.CommentRepo;
 import org.spring.ukmacritic.repos.TitleRepo;
 import org.spring.ukmacritic.repos.UserRepo;
 import org.springframework.stereotype.Service;
+import org.yaml.snakeyaml.events.Event;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -30,6 +31,9 @@ public class CommentService {
     public UUID create(CommentCreateDto c){
 
         var user = userRepo.findById(c.userId()).orElseThrow(() -> new IllegalArgumentException("User with id " + c.userId() + " is not found"));
+
+        if(user.isState()) throw new SecurityException("You are not allowed to perform this action!");
+
         var title = titleRepo.findById(c.titleId()).orElseThrow(() -> new IllegalArgumentException("Comment with id " + c.titleId() + " is not found"));
 
         var commentEntity = Comment.builder()
@@ -76,8 +80,19 @@ public class CommentService {
                 .toList();
     }
 
-    public CommentResponseDto update(UUID id, CommentUpdateDto c){
+    public CommentResponseDto update(UUID id, CommentUpdateDto c, String token){
+
+        if (token == null)
+            throw new SecurityException("User not authenticated.");
+
+        String idFromToken = jwtUtil.extractUserId(token);
         var comment = commentRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Comment with id " + id + " is not found"));
+
+        if(!String.valueOf(comment.getUser().getUserId()).equals(idFromToken))
+            throw new SecurityException("Access denied: user ID does not match authenticated user!");
+
+        var user = userRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("User with id " + id + " is not found"));
+        if(user.isState()) throw new SecurityException("You are not allowed to perform this action!");
 
         comment.setRating(c.rating());
         comment.setInfo(c.info());
@@ -85,6 +100,33 @@ public class CommentService {
 
         commentRepo.saveAndFlush(comment);
         return commentEntityToTestDto(comment);
+    }
+
+    public boolean remove(UUID commentId, UUID userId, String token) {
+
+        if (token == null)
+            throw new SecurityException("User not authenticated.");
+
+        String idFromToken = jwtUtil.extractUserId(token);
+
+        var user = userRepo.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Manager with id " + userId + " is not found"));
+        var comment = commentRepo.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("Comment with id " + commentId + " is not found"));
+        var userFromComment = comment.getUser();
+
+        if (userFromComment == null)
+            throw new IllegalStateException("Comment author not found.");
+        if (!String.valueOf(userFromComment.getUserId()).equals(idFromToken))
+            throw new SecurityException("Access denied: user ID does not match authenticated user!");
+        if(user.isState())
+            throw new SecurityException("Access denied: You do not have appropriate right to perform this action!");
+
+
+        commentRepo.delete(comment);
+        System.out.println("Comment "+commentId+" was successfully deleted!");
+
+        return true;
     }
 
     public boolean delete(UUID commentId, UUID managerId, String token) {
@@ -97,9 +139,10 @@ public class CommentService {
         var manager = userRepo.findById(managerId)
                 .orElseThrow(() -> new IllegalArgumentException("Manager with id " + managerId + " is not found"));
 
-        if (!manager.isState() || !String.valueOf(manager.getUserId()).equals(idFromToken))
-            throw new SecurityException("Access denied: manager ID does not match authenticated user.");
-
+        if (!String.valueOf(manager.getUserId()).equals(idFromToken))
+            throw new SecurityException("Access denied: manager ID does not match authenticated user!");
+        if(!manager.isState())
+            throw new SecurityException("Access denied: You do not have appropriate right to perform this action!");
 
         var comment = commentRepo.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("Comment with id " + commentId + " is not found"));

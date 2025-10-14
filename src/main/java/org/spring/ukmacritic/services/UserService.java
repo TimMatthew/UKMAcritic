@@ -79,6 +79,7 @@ public class UserService {
     }
 
     public boolean delete(UUID id){
+
         var user = userRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("User with id " + id + " is not found"));
         userRepo.delete(user);
         return true;
@@ -90,7 +91,7 @@ public class UserService {
         return UserTestDto.builder()
                 .id(u.getUserId())
                 .email(u.getEmail())
-                .password(u.getLogin())
+                .password(u.getPassword())
                 .login(u.getLogin())
                 .name(u.getName())
                 .state(u.isState())
