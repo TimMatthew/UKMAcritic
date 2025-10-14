@@ -49,8 +49,8 @@ public class CommentController {
     }
 
     @DeleteMapping("{comment}/{manager}")
-    public boolean delete(@PathVariable UUID comment, @PathVariable UUID manager){
-        return cs.delete(comment, manager);
+    public boolean delete(@PathVariable UUID comment, @PathVariable UUID manager, @CookieValue(name="jwt") String jwtToken){
+        return cs.delete(comment, manager, jwtToken);
     }
 
 

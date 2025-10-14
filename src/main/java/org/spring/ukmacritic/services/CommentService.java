@@ -5,6 +5,7 @@ import org.spring.ukmacritic.dto.comment.CommentCreateDto;
 import org.spring.ukmacritic.dto.comment.CommentResponseDto;
 import org.spring.ukmacritic.dto.comment.CommentUpdateDto;
 import org.spring.ukmacritic.entities.Comment;
+import org.spring.ukmacritic.security.JWTUtils;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.spring.ukmacritic.repos.CommentRepo;
@@ -24,6 +25,7 @@ public class CommentService {
     private final UserRepo userRepo;
     private final TitleRepo titleRepo;
     private final JavaMailSender mailSender;
+    private final JWTUtils jwtUtil;
 
     public UUID create(CommentCreateDto c){
 
@@ -85,7 +87,19 @@ public class CommentService {
         return commentEntityToTestDto(comment);
     }
 
-    public boolean delete(UUID commentId, UUID managerId) {
+    public boolean delete(UUID commentId, UUID managerId, String token) {
+
+        if (token == null)
+            throw new SecurityException("User not authenticated.");
+
+        String idFromToken = jwtUtil.extractUserId(token);
+
+        var manager = userRepo.findById(managerId)
+                .orElseThrow(() -> new IllegalArgumentException("Manager with id " + managerId + " is not found"));
+
+        if (!manager.isState() || !String.valueOf(manager.getUserId()).equals(idFromToken))
+            throw new SecurityException("Access denied: manager ID does not match authenticated user.");
+
 
         var comment = commentRepo.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("Comment with id " + commentId + " is not found"));
