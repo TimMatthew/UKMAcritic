@@ -1,12 +1,10 @@
 package org.spring.ukmacritic.services;
 
 import lombok.RequiredArgsConstructor;
-import org.spring.ukmacritic.dto.user.UserCreateDto;
-import org.spring.ukmacritic.dto.user.UserResponseDto;
-import org.spring.ukmacritic.dto.user.UserTestDto;
-import org.spring.ukmacritic.dto.user.UserUpdateDto;
+import org.spring.ukmacritic.dto.user.*;
 import org.spring.ukmacritic.entities.User;
 import org.spring.ukmacritic.repos.UserRepo;
+import org.spring.ukmacritic.security.PasswordUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,21 +15,35 @@ import java.util.UUID;
 public class UserService {
 
     private final UserRepo userRepo;
+    private final PasswordUtils pwdUtils;
 
-    public UUID create(UserCreateDto user){
+    public UserResponseDto authenticate(UserAuthDto dto) {
+        var user = userRepo.findByLogin(dto.login())
+                .orElseThrow(() -> new IllegalArgumentException("User with login " + dto.login() + " not found"));
+
+        if (!pwdUtils.matchPassword(dto.password(), user.getPassword())) {
+            throw new IllegalArgumentException("Invalid password");
+        }
+        return userEntityToResponseDTO(user);
+    }
+
+    public UUID create(UserRegisterDto user){
+
+        if(userRepo.existsByEmail(user.email()))
+            throw new IllegalArgumentException("User with the following email already exists");
+        if(userRepo.existsByLogin(user.login()))
+            throw new IllegalArgumentException("User with the following email already exists");
 
         var userEntity = User.builder()
                 .email(user.email())
-                .password(user.password())
+                .password(pwdUtils.hash(user.password()))
                 .login(user.login())
                 .name(user.name())
                 .state(user.state())
                 .build();
 
         userEntity = userRepo.saveAndFlush(userEntity);
-
         return userEntity.getUserId();
-
     }
 
     public List<UserTestDto> getAll(){
@@ -45,6 +57,12 @@ public class UserService {
 
         return userEntityToResponseDTO(user);
     }
+
+    public User getEntity(UUID userId){
+
+        return userRepo.findById(userId).orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " is not found"));
+    }
+
 
     public UserResponseDto update(UUID id, UserUpdateDto dto){
         var user = userRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("User with id " + id + " is not found"));
@@ -83,6 +101,16 @@ public class UserService {
         return UserResponseDto.builder()
                 .userId(u.getUserId())
                 .login(u.getLogin())
+                .userName(u.getName())
+                .state(u.isState())
+                .build();
+    }
+
+    public UserProfileDto userEntityToProfileDTO(User u){
+        return UserProfileDto.builder()
+                .userId(u.getUserId())
+                .login(u.getLogin())
+                .email(u.getEmail())
                 .userName(u.getName())
                 .state(u.isState())
                 .build();

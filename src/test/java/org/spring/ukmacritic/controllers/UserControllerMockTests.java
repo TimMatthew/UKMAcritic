@@ -5,7 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.spring.ukmacritic.dto.user.UserCreateDto;
+import org.spring.ukmacritic.dto.user.UserRegisterDto;
 import org.spring.ukmacritic.dto.user.UserTestDto;
 import org.spring.ukmacritic.dto.user.UserUpdateDto;
 import org.spring.ukmacritic.services.UserService;
@@ -27,14 +27,14 @@ class UserControllerMockTests {
     @Test
     void createUser_ShouldReturnUuid() {
         UUID id = UUID.randomUUID();
-        when(userService.create(any(UserCreateDto.class))).thenReturn(id);
+        when(userService.create(any(UserRegisterDto.class))).thenReturn(id);
 
-        UUID result = userController.create(new UserCreateDto(
+        UUID result = userController.create(new UserRegisterDto(
                 "alice@mail.com", "pwd","alice",
                 "Alice Smith", false));
 
         assertThat(result).isEqualTo(id);
-        verify(userService).create(any(UserCreateDto.class));
+        verify(userService).create(any(UserRegisterDto.class));
     }
 
     @Test
@@ -63,12 +63,12 @@ class UserControllerMockTests {
     @Test
     void createUser_ShouldCallServiceOnce() {
         UUID id = UUID.randomUUID();
-        when(userService.create(any(UserCreateDto.class))).thenReturn(id);
+        when(userService.create(any(UserRegisterDto.class))).thenReturn(id);
 
-        userController.create(new UserCreateDto("x@mail.com", "pwd", "x", "X User", false));
-        userController.create(new UserCreateDto("y@mail.com","pwd", "y", "Y User", false));
+        userController.create(new UserRegisterDto("x@mail.com", "pwd", "x", "X User", false));
+        userController.create(new UserRegisterDto("y@mail.com","pwd", "y", "Y User", false));
 
-        verify(userService, times(2)).create(any(UserCreateDto.class));
+        verify(userService, times(2)).create(any(UserRegisterDto.class));
     }
 
     @Test
