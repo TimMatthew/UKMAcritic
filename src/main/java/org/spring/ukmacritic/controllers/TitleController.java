@@ -1,6 +1,7 @@
 package org.spring.ukmacritic.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.spring.ukmacritic.dto.title.TitleResponseDto;
 import org.spring.ukmacritic.dto.title.TitleUpsertDto;
 import org.spring.ukmacritic.services.TitleService;
 import org.springframework.web.bind.annotation.*;
@@ -21,12 +22,12 @@ public class TitleController {
     }
 
     @GetMapping("{id}")
-    public TitleUpsertDto get(@PathVariable UUID id) {
+    public TitleResponseDto get(@PathVariable UUID id) {
         return titleService.get(id);
     }
 
     @GetMapping
-    public List<TitleUpsertDto> getAll() {
+    public List<TitleResponseDto> getAll() {
         return titleService.getAll();
     }
 

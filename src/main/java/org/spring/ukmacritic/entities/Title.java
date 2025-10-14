@@ -52,4 +52,7 @@ public class Title {
 
     @Column(name = "id_tmdb")
     private int idTmdb;
+
+    @Column(name = "tmdb_image_url")
+    private String imageUrl;
 }

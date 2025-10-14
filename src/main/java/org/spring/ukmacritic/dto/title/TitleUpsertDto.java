@@ -16,7 +16,8 @@ public record TitleUpsertDto(
         String overview,
         short releaseYear,
         byte rating,
-        int tmdb
+        int tmdb,
+        String tmdb_image_url
 ) {
 
 }
