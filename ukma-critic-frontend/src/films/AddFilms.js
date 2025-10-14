@@ -40,8 +40,8 @@ export default function AddFilms() {
 
     const handleAddToDatabase = async (film) => {
         try {
-            const detailsRes = await axios.get(
-                `https://api.themoviedb.org/3/movie/${film.id}/credits`,
+            const creditsRes = await axios.get(
+                `${process.env.REACT_APP_MOVIE_API_CALL}/${film.id}/credits`,
                 {
                     headers: {
                         accept: "application/json",
@@ -50,21 +50,33 @@ export default function AddFilms() {
                 }
             );
 
+            const credits = creditsRes.data;
+
+            const detailsRes = await axios.get(
+                `${process.env.REACT_APP_MOVIE_API_CALL}/${film.id}`,
+                {
+                    headers: {
+                        accept: "application/json",
+                        Authorization: `Bearer ${process.env.REACT_APP_TMDB_API_KEY}`,
+                    },
+                }
+            );
             const details = detailsRes.data;
 
-            const directors = details.crew
+            const directors = credits.crew
                 .filter((c) => c.job === "Director")
                 .map((d) => d.name);
 
-            const actors = details.cast.map((a) => a.name);
-            // const genres = details.genres.map((g) => g.name);
-            // const regions = details.production_countries.map((r) => r.name);
+            const actors = credits.cast.map((a) => a.name);
+            const genres = details.genres.map((g) => g.name);
+
+            console.log(details);
 
             const filmData = {
                 directors,
-                // genres,
+                genres,
                 actors,
-                // regions,
+                regions: details.origin_country,
                 titleName: film.title,
                 overview: film.overview,
                 releaseYear: film.release_date
@@ -229,14 +241,14 @@ export default function AddFilms() {
                                                     "—"
                                                 )}
                                             </div>
-                                            {/*<p>*/}
-                                            {/*    <strong>Жанри:</strong>{" "}*/}
-                                            {/*    {selectedFilm.genres.join(", ") || "—"}*/}
-                                            {/*</p>*/}
-                                            {/*<p>*/}
-                                            {/*    <strong>Регіони:</strong>{" "}*/}
-                                            {/*    {selectedFilm.regions.join(", ") || "—"}*/}
-                                            {/*</p>*/}
+                                            <p>
+                                                <strong>Genres:</strong>{" "}
+                                                {selectedFilm.genres.join(", ") || "—"}
+                                            </p>
+                                            <p>
+                                                <strong>Regions:</strong>{" "}
+                                                {selectedFilm.regions.join(", ") || "—"}
+                                            </p>
                                             <p>
                                                 <strong>Release year:</strong> {selectedFilm.releaseYear}
                                             </p>
