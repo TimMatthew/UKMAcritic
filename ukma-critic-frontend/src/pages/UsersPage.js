@@ -1,140 +1,123 @@
-import React from "react";
-import {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import api from "../api/AxiosConfig";
-import {Link} from "react-router-dom";
 
-/*
-!to_change style + button styles
-*/
-
-export default function UsersPage () {
+export default function UsersPage() {
     const [users, setUsers] = useState([]);
-    const [message, setMessage] = useState('');
-    const [messageType, setMessageType] = useState('success');
-    // or, for example, 'danger'.
+    const [message, setMessage] = useState("");
+    const [messageType, setMessageType] = useState("success");
 
     useEffect(() => {
-        loadUsers().then(r => {});
+        loadUsers();
     }, []);
 
     const loadUsers = async () => {
         try {
-            const response = await api.get('/users');
+            const response = await api.get("/users");
             setUsers(response.data);
-            console.log(response.data);
-        }catch (err){
-            console.log(err);
+        } catch (err) {
+            console.error(err);
         }
-    }
+    };
 
     const deleteUser = async (id, name) => {
-        const confirmed = window.confirm('Are you sure you want to delete this user?');
+        const confirmed = window.confirm("Are you sure you want to delete this user?");
         if (!confirmed) {
-            setMessage(`User ${name} was not deleted`);
-            setMessageType('warning');
-            autoClearMessage();
+            showMessage(`User ${name} was not deleted`, "warning");
             return;
         }
 
         try {
             await api.delete(`/users/${id}`);
             await loadUsers();
-            setMessage(`User ${name} was deleted`);
-            setMessageType('success');
-            autoClearMessage();
+            showMessage(`User ${name} was deleted`, "success");
         } catch (err) {
-            console.error('Failed to delete user:', err);
-            setMessage(`Failed to delete user ${name}`);
-            setMessageType('danger');
-            autoClearMessage();
+            console.error("Failed to delete user:", err);
+            showMessage(`Failed to delete user ${name}`, "danger");
         }
     };
 
-    const autoClearMessage = () => {
-        setTimeout(() => {
-            setMessage('');
-        }, 3000);
+    const showMessage = (text, type) => {
+        setMessage(text);
+        setMessageType(type);
+        setTimeout(() => setMessage(""), 3000);
     };
 
     return (
-        <div className="container">
-            <div className="py-4">
-                {message && (
-                    <div className={`alert alert-${messageType}`} role="alert">
-                        {message}
-                    </div>
-                )}
+        <div className="container py-4">
+            <h2 className="mb-4 text-primary fw-semibold">User Management</h2>
 
-                <table className="table border shadow">
-                    <thead>
-                    <tr style={{textAlign: 'left'}}>
-                        <th style={{color: '#442d1c'}} scope="col">№</th>
-                        <th style={{color: '#442d1c'}}  scope="col">Name</th>
-                        <th style={{color: '#442d1c'}} scope="col">Login</th>
-                        <th style={{color: '#442d1c'}} scope="col">Role</th>
-                        <th style={{color: '#442d1c'}} scope="col">Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody className="table-group-divider" style={{color: '#442d1c'}}>
-                    {
-                        users.map((user, index) => (
-                            <tr key={user.id} style={{textAlign: 'left'}}>
-                                <td>{index + 1}</td>
-                                <td className="ms-3" style={{textAlign: 'left'}}>
-                                    <p className="fw-bold mb-1">{user.name}</p>
-                                    <p className="text-muted mb-0">{user.email}</p>
-                                </td>
-                                <td style={{textAlign: 'left'}}>{user.login}</td>
-                                <td className="align-middle">
-                                    {user.state ? 'manager' : 'client'}
-                                </td>
-                                <td>
-                                    {/* !to_change STYLE WILL BE CHANGED */}
-                                    <Link className="btn mx-2" to={`/users/view_user/${user.id}`}
-                                          style={{backgroundColor: 'white', color: 'blue', borderColor: 'blue'}}>
-                                        View
-                                    </Link>
+            {message && (
+                <div className={`alert alert-${messageType} alert-dismissible fade show`} role="alert">
+                    {message}
+                    <button type="button" className="btn-close" onClick={() => setMessage("")}></button>
+                </div>
+            )}
 
-
-                                    <Link className="btn mx-2"
-                                          to={`/users/update_user/${user.id}`}
-                                          style={{backgroundColor: 'white', color: 'blue', borderColor: 'blue'}}>
-                                        Update
-                                    </Link>
-                                    <button className="btn mx-2"
-                                            style={{backgroundColor: 'white', color: 'red', borderColor: 'red'}}
-                                            onClick={() => {
-                                                deleteUser(user.id, user.name);
-                                            }}>
-                                        Delete
-                                    </button>
-
-                                    { user.state === false &&
-                                        <button className="btn mx-2"
-                                                style={{backgroundColor: 'white', color: 'green', borderColor: 'green'}}
-                                                onClick={() => {
-                                                    // !to_change add see comments history
-                                                }}>
-                                            See comments history
-                                        </button>
-                                    }
+            <div className="card shadow-sm border-0 mb-4">
+                <div className="card-body p-0">
+                    <table className="table table-hover align-middle mb-0">
+                        <thead className="table-light">
+                        <tr style={{textAlign: 'left'}}>
+                            <th scope="col">№</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Login</th>
+                            <th scope="col">Role</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {users.length === 0 ? (
+                            <tr>
+                                <td colSpan="5" className="text-center text-muted py-3">
+                                    No users found
                                 </td>
                             </tr>
+                        ) : (
+                            users.map((user, index) => (
+                                <tr key={user.id} style={{textAlign: 'left'}}>
+                                    <td>{index + 1}</td>
+                                    <td>
+                                        <div className="fw-bold">{user.name}</div>
+                                        <small className="text-muted">{user.email}</small>
+                                    </td>
+                                    <td>{user.login}</td>
+                                    <td>{user.state ? "Manager" : "Client"}</td>
+                                    <td className="text-left" >
+                                        <Link to={`/users/view_user/${user.id}`} className="btn btn-outline-primary btn-sm mx-1">
+                                            <i className="bi bi-eye me-1"></i> View
+                                        </Link>
 
-                        ))
-                    }
-                    </tbody>
-                </table>
+                                        <Link to={`/users/update_user/${user.id}`} className="btn btn-outline-secondary btn-sm mx-1">
+                                            <i className="bi bi-pencil me-1"></i> Update
+                                        </Link>
+
+                                        <button
+                                            className="btn btn-outline-danger btn-sm mx-1"
+                                            onClick={() => deleteUser(user.id, user.name)}
+                                        >
+                                            <i className="bi bi-trash me-1"></i> Delete
+                                        </button>
+
+                                        {!user.state && (
+                                            <button className="btn btn-outline-success btn-sm mx-1">
+                                                <i className="bi bi-chat-dots me-1"></i> Comments
+                                            </button>
+                                        )}
+                                    </td>
+                                </tr>
+                            ))
+                        )}
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            {/* !to_change decide whether manager will have the possibility to create new users */}
-            <Link className="btn mx-2"
-                  to={`/users/update_user/$s}`}
-                  style={{backgroundColor: 'white', color: 'green', borderColor: 'green'}}
-                  onClick={() => {
-                      console.log('User will be created by this button')
-                  }}>
-                Create new user
-            </Link>
+
+            <div className="text-end">
+                <Link to={`/users/update_user/$s}`} className="btn btn-success">
+                    <i className="bi bi-plus-lg me-1"></i> Create new user
+                </Link>
+            </div>
         </div>
-    )
+    );
 }

@@ -8,6 +8,11 @@ export default function FilmsPage() {
                   className="btn btn-primary"
                   style={{backgroundColor: 'white', color: 'blue', borderColor: 'blue'}}
             >Add films page</Link>
+
+            <Link type="button" to={`/films/all-films`}
+                  className="btn btn-primary"
+                  style={{backgroundColor: 'white', color: 'blue', borderColor: 'blue'}}
+            >See films</Link>
         </div>
     )
 }

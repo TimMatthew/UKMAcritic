@@ -8,6 +8,8 @@ import ViewUser from "./users/ViewUser";
 import UpdateUser from "./users/UpdateUser";
 import FilmsPage from "./pages/FilmsPage";
 import AddFilms from "./films/AddFilms";
+import ViewFilmsList from "./films/ViewFilmsList";
+import UpdateFilm from "./films/UpdateFilm";
 
 
 function App() {
@@ -25,6 +27,8 @@ function App() {
 
                 <Route exact path="/films" element={<FilmsPage/>}></Route>
                 <Route exact path="/films/add" element={<AddFilms/>}></Route>
+                <Route exact path="/films/all-films" element={<ViewFilmsList/>}></Route>
+                <Route exact path="/films/edit/:id" element={<UpdateFilm/>}></Route>
             </Routes>
         </Router>
     </div>
