@@ -13,6 +13,7 @@ import UpdateFilm from "./films/UpdateFilm";
 import LoginPage from "./pages/LoginPage";
 import {AuthProvider} from "./auth/AuthProvider";
 import ProtectedRoute from "./auth/ProtectedRoute";
+import RegisterPage from "./pages/RegisterPage";
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
                 <Navbar />
                 <Routes>
                     <Route path="/login" element={<LoginPage />} />
+                    <Route path="/register" element={<RegisterPage />} />
 
                     <Route
                         path="/"

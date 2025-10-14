@@ -76,7 +76,7 @@ export default function LoginPage({ onLogin }) {
                             </div>
                             <div className="col-md-7">
                                 <div className="card-body p-4">
-                                    <h5 className="card-title mb-3">Log in</h5>
+                                    <h5 className="card-title mb-3 title-one">Log in</h5>
 
                                     {error && (
                                         <div className="alert alert-danger py-2" role="alert">

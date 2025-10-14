@@ -4,7 +4,11 @@
     --green: #92a377;
     --orange : #fe9542;
     --orange-black: #190b00;
-    --orange-white: #fae3d1;
+    --orange-white: #f1e7e0;
+}
+
+body {
+    background-color: var(--yellowish-white);
 }
 
 
@@ -22,4 +26,29 @@
 
 a {
     color: var(--green);
+}
+
+.title-one {
+    color: var(--orange);
+}
+
+.card-body{
+    background-color: var(--orange-white);
+}
+
+input {
+    background-color: var(--yellowish-white) !important;
+    border-color: var(--orange-black) !important;
+}
+
+.btn-outline-secondary {
+    background-color: var(--lilac);
+    color: var(--orange-black);
+    border-color: var(--orange-black);
+}
+
+.btn-outline-secondary:hover {
+    background-color: var(--orange-black);
+    color: var(--lilac);
+    border-color: var(--lilac);
 }
