@@ -67,12 +67,12 @@ public class UserController {
     }
 
     @PutMapping("{id}")
-    public UserResponseDto update(@PathVariable UUID id, @RequestBody UserUpdateDto dto){
-        return us.update(id, dto);
+    public UserResponseDto update(@PathVariable UUID id, @RequestBody UserUpdateDto dto, @CookieValue("jwt") String token){
+        return us.update(id, dto, token);
     }
 
     @DeleteMapping("{id}")
-    public boolean delete(@PathVariable UUID id){
-        return us.delete(id);
+    public boolean delete(@PathVariable UUID id, @CookieValue("jwt") String token){
+        return us.delete(id, token);
     }
 }

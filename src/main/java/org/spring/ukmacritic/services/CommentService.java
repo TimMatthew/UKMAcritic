@@ -28,13 +28,15 @@ public class CommentService {
     private final JavaMailSender mailSender;
     private final JWTUtils jwtUtil;
 
-    public UUID create(CommentCreateDto c){
+    public UUID create(CommentCreateDto c, String token){
 
-        var user = userRepo.findById(c.userId()).orElseThrow(() -> new IllegalArgumentException("User with id " + c.userId() + " is not found"));
+        String userId = jwtUtil.extractUserId(token);
+
+        var user = userRepo.findById(UUID.fromString(userId)).orElseThrow(() -> new IllegalArgumentException("User with id " + c.userId() + " is not found"));
 
         if(user.isState()) throw new SecurityException("You are not allowed to perform this action!");
 
-        var title = titleRepo.findById(c.titleId()).orElseThrow(() -> new IllegalArgumentException("Comment with id " + c.titleId() + " is not found"));
+        var title = titleRepo.findById(UUID.fromString(c.titleId())).orElseThrow(() -> new IllegalArgumentException("Comment with id " + c.titleId() + " is not found"));
 
         var commentEntity = Comment.builder()
                 .user(user)
@@ -86,9 +88,10 @@ public class CommentService {
             throw new SecurityException("User not authenticated.");
 
         String idFromToken = jwtUtil.extractUserId(token);
+        String roleFromToken = jwtUtil.extractRole(token);
         var comment = commentRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Comment with id " + id + " is not found"));
 
-        if(!String.valueOf(comment.getUser().getUserId()).equals(idFromToken))
+        if(roleFromToken.equals("true") || !String.valueOf(comment.getUser().getUserId()).equals(idFromToken))
             throw new SecurityException("Access denied: user ID does not match authenticated user!");
 
         var user = userRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("User with id " + id + " is not found"));

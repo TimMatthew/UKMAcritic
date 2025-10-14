@@ -18,8 +18,8 @@ public class CommentController {
     private final CommentService cs;
 
     @PostMapping
-    public UUID create(@RequestBody CommentCreateDto title) {
-        return cs.create(title);
+    public UUID create(@RequestBody CommentCreateDto title, @CookieValue(name="jwt") String jwtToken) {
+        return cs.create(title, jwtToken);
     }
 
     @GetMapping("{id}")
@@ -48,12 +48,12 @@ public class CommentController {
         return cs.update(id, dto, jwtToken);
     }
 
-    @DeleteMapping("{comment}/{manager}")
+    @DeleteMapping("delete/{comment}/{manager}")
     public boolean delete(@PathVariable UUID comment, @PathVariable UUID manager, @CookieValue(name="jwt") String jwtToken){
         return cs.delete(comment, manager, jwtToken);
     }
 
-    @DeleteMapping("{comment}/{user}")
+    @DeleteMapping("remove/{comment}/{user}")
     public boolean remove(@PathVariable UUID comment, @PathVariable UUID user, @CookieValue(name="jwt") String jwtToken){
         return cs.remove(comment, user, jwtToken);
     }

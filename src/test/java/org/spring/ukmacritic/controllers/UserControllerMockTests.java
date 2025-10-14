@@ -68,6 +68,7 @@ class UserControllerMockTests {
         userController.create(new UserRegisterDto("x@mail.com", "pwd", "x", "X User", false));
         userController.create(new UserRegisterDto("y@mail.com","pwd", "y", "Y User", false));
 
+
         verify(userService, times(2)).create(any(UserRegisterDto.class));
     }
 
