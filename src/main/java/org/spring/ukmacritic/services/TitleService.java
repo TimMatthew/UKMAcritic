@@ -28,6 +28,7 @@ public class TitleService {
                 .releaseYear(title.releaseYear())
                 .rating(title.rating())
                 .idTmdb(title.tmdb())
+                .imageUrl(title.tmdb_image_url())
                 .build();
 
         titleEntity = titleRepo.saveAndFlush(titleEntity);
@@ -35,14 +36,14 @@ public class TitleService {
         return titleEntity.getTitleId();
     }
 
-    public TitleUpsertDto get(UUID id){
+    public TitleResponseDto get(UUID id){
         var title = titleRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Title with id " + id + " is not found"));
-        return titleEntityToUpsertDTO(title);
+        return titleEntityToResponseDTO(title);
     }
 
-    public List<TitleUpsertDto> getAll(){
+    public List<TitleResponseDto> getAll(){
         return titleRepo.findAll().stream()
-                .map(this::titleEntityToUpsertDTO)
+                .map(this::titleEntityToResponseDTO)
                 .toList();
     }
 
@@ -56,6 +57,8 @@ public class TitleService {
         title.setTitleName(dto.titleName());
         title.setOverview(dto.overview());
         title.setReleaseYear(dto.releaseYear());
+        title.setIdTmdb(dto.tmdb());
+        title.setImageUrl(dto.tmdb_image_url());
 
         titleRepo.saveAndFlush(title);
 
@@ -81,12 +84,13 @@ public class TitleService {
                 .overview(t.getOverview())
                 .releaseYear(t.getReleaseYear())
                 .tmdb(t.getIdTmdb())
+                .tmdb_image_url(t.getImageUrl())
                 .build();
     }
 
     private TitleResponseDto titleEntityToResponseDTO(Title t){
         return TitleResponseDto.builder()
-
+                .id(t.getTitleId())
                 .directors(t.getDirectors())
                 .genres(t.getGenres())
                 .actors(t.getActors())
@@ -95,6 +99,7 @@ public class TitleService {
                 .overview(t.getOverview())
                 .releaseYear(t.getReleaseYear())
                 .tmdb(t.getIdTmdb())
+                .tmdb_image_url(t.getImageUrl())
                 .build();
     }
 }

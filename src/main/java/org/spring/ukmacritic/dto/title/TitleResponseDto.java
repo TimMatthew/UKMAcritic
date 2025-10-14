@@ -3,9 +3,11 @@ package org.spring.ukmacritic.dto.title;
 import lombok.Builder;
 
 import java.util.List;
+import java.util.UUID;
 
 @Builder
 public record TitleResponseDto(
+        UUID id,
         List<String> directors,
         List<String> genres,
         List<String> actors,
@@ -13,7 +15,9 @@ public record TitleResponseDto(
         String titleName,
         String overview,
         short releaseYear,
-        int tmdb
+        byte rating,
+        int tmdb,
+        String tmdb_image_url
 ) {
 
 }

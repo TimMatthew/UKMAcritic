@@ -2,10 +2,9 @@ package org.spring.ukmacritic.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.spring.ukmacritic.dto.comment.CommentCreateDto;
-import org.spring.ukmacritic.dto.comment.CommentTestDto;
+import org.spring.ukmacritic.dto.comment.CommentResponseDto;
 import org.spring.ukmacritic.dto.comment.CommentUpdateDto;
 import org.spring.ukmacritic.services.CommentService;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,23 +24,36 @@ public class CommentController {
     }
 
     @GetMapping("{id}")
-    public CommentTestDto get(@PathVariable UUID id){
+    public CommentResponseDto get(@PathVariable UUID id){
         return cs.get(id);
     }
 
     @GetMapping
-    public List<CommentTestDto> getAll(){
+    public List<CommentResponseDto> getAll(){
         return cs.getAll();
     }
 
+    @GetMapping("user/{userId}")
+    public List<CommentResponseDto> getAllByUser(@PathVariable UUID userId){
+        return cs.getAllByUser(userId);
+    }
+
+    @GetMapping("title/{titleId}")
+    public List<CommentResponseDto> getAllByTitle(@PathVariable UUID titleId){
+        return cs.getAllByTitle(titleId);
+    }
+
+
     @PutMapping("{id}")
-    public CommentTestDto update(@PathVariable UUID id, @RequestBody CommentUpdateDto dto){
+    public CommentResponseDto update(@PathVariable UUID id, @RequestBody CommentUpdateDto dto){
         return cs.update(id, dto);
     }
 
-    @DeleteMapping("{id}")
-    public boolean delete(@PathVariable UUID id){
-        return cs.delete(id);
+    @DeleteMapping("{comment}/{manager}")
+    public boolean delete(@PathVariable UUID comment, @PathVariable UUID manager){
+        return cs.delete(comment, manager);
     }
+
+
 
 }
