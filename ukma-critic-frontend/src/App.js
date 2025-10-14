@@ -10,28 +10,86 @@ import FilmsPage from "./pages/FilmsPage";
 import AddFilms from "./films/AddFilms";
 import ViewFilmsList from "./films/ViewFilmsList";
 import UpdateFilm from "./films/UpdateFilm";
+import LoginPage from "./pages/LoginPage";
+import {AuthProvider} from "./auth/AuthProvider";
+import ProtectedRoute from "./auth/ProtectedRoute";
 
 
 function App() {
     return (
-    <div className="App">
-        <Router>
-            <Navbar/>
+        <AuthProvider>
+            <Router>
+                <Navbar />
+                <Routes>
+                    <Route path="/login" element={<LoginPage />} />
 
-            <Routes>
-                <Route exact path="/" element={<HomePage/>}></Route>
-
-                <Route exact path="/users" element={<UsersPage/>}></Route>
-                <Route exact path="/users/view_user/:id" element={<ViewUser />} />
-                <Route exact path="/users/update_user/:id" element={<UpdateUser />} />
-
-                <Route exact path="/films" element={<FilmsPage/>}></Route>
-                <Route exact path="/films/add" element={<AddFilms/>}></Route>
-                <Route exact path="/films/all-films" element={<ViewFilmsList/>}></Route>
-                <Route exact path="/films/edit/:id" element={<UpdateFilm/>}></Route>
-            </Routes>
-        </Router>
-    </div>
+                    <Route
+                        path="/"
+                        element={
+                            <ProtectedRoute>
+                                <HomePage />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/users"
+                        element={
+                            <ProtectedRoute>
+                                <UsersPage />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/users/view_user/:id"
+                        element={
+                            <ProtectedRoute>
+                                <ViewUser />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/users/update_user/:id"
+                        element={
+                            <ProtectedRoute>
+                                <UpdateUser />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/films"
+                        element={
+                            <ProtectedRoute>
+                                <FilmsPage />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/films/add"
+                        element={
+                            <ProtectedRoute>
+                                <AddFilms />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/films/all-films"
+                        element={
+                            <ProtectedRoute>
+                                <ViewFilmsList />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/films/edit/:id"
+                        element={
+                            <ProtectedRoute>
+                                <UpdateFilm />
+                            </ProtectedRoute>
+                        }
+                    />
+                </Routes>
+            </Router>
+        </AuthProvider>
     );
 }
 

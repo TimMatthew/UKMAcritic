@@ -1,0 +1,25 @@
+:root {
+    --yellowish-white: #f1f6e2;
+    --lilac: #d0d0f4;
+    --green: #92a377;
+    --orange : #fe9542;
+    --orange-black: #190b00;
+    --orange-white: #fae3d1;
+}
+
+
+.login-button {
+    color: var(--orange-black);
+    background-color: var(--orange);
+    border-color: var(--orange-black);
+}
+
+.login-button:hover {
+    color: var(--orange);
+    background-color: var(--orange-black);
+    border-color: var(--orange);
+}
+
+a {
+    color: var(--green);
+}
