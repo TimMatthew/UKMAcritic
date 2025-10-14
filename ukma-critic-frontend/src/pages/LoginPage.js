@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./LoginPage.css"
-import api from "../api/AxiosConfig";
 import {Link} from "react-router-dom";
 
 
@@ -40,13 +39,7 @@ export default function LoginPage({ onLogin }) {
                 body: JSON.stringify({ login, password })
             });
 
-            console.log(login, password)
-
-            if (!response.ok) throw new Error("Login failed");
-            console.log(response.status);
-
             const data = await response.json();
-            console.log(data);
             if (onLogin) onLogin(data);
             if (onLogin) onLogin({ email: login, remember });
         } catch (err) {
