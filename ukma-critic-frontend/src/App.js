@@ -14,11 +14,13 @@ import LoginPage from "./pages/LoginPage";
 import {AuthProvider} from "./context/AuthProvider";
 import ProtectedRoute from "./context/ProtectedRoute";
 import RegisterPage from "./pages/RegisterPage";
+import {CookiesProvider} from "react-cookie";
 
 
 function App() {
     return (
         <Router>
+            <CookiesProvider>
         <AuthProvider>
                 <Navbar />
                 <Routes>
@@ -91,6 +93,7 @@ function App() {
                     />
                 </Routes>
         </AuthProvider>
+            </CookiesProvider>
             </Router>
     );
 }
