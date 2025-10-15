@@ -10,8 +10,8 @@ import java.util.UUID;
 
 @Builder
 public record CommentCreateDto(
-        UUID userId,
-        UUID titleId,
+        String userId,
+        String titleId,
         byte rating,
         String info
 ) {

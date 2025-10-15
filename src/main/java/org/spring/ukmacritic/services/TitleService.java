@@ -1,10 +1,12 @@
 package org.spring.ukmacritic.services;
 
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.spring.ukmacritic.dto.title.TitleResponseDto;
 import org.spring.ukmacritic.dto.title.TitleUpsertDto;
 import org.spring.ukmacritic.entities.Title;
 import org.spring.ukmacritic.repos.TitleRepo;
+import org.spring.ukmacritic.security.JWTUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,8 +17,14 @@ import java.util.UUID;
 public class TitleService {
 
     private final TitleRepo titleRepo;
+    private final JWTUtils jwt;
 
-    public UUID create(TitleUpsertDto title){
+    public UUID create(TitleUpsertDto title, String token){
+
+        String roleFromToken = jwt.extractRole(token);
+
+        if(roleFromToken.equals("false"))
+            throw new IllegalArgumentException("You are not allowed to perform this action!");
 
         var titleEntity = Title.builder()
                 .directors(title.directors())
@@ -47,7 +55,13 @@ public class TitleService {
                 .toList();
     }
 
-    public TitleUpsertDto update(UUID id, TitleUpsertDto dto){
+    public TitleUpsertDto update(UUID id, TitleUpsertDto dto, String token){
+
+        String roleFromToken = jwt.extractRole(token);
+
+        if(roleFromToken.equals("false"))
+            throw new IllegalArgumentException("You are not allowed to perform this action!");
+
         var title = titleRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Title with id " + id + " is not found"));
 
         title.setDirectors(dto.directors());
@@ -65,7 +79,13 @@ public class TitleService {
         return titleEntityToUpsertDTO(title);
     }
 
-    public boolean delete(UUID id){
+    public boolean delete(UUID id, String token){
+
+        String roleFromToken = jwt.extractRole(token);
+
+        if(roleFromToken.equals("false"))
+            throw new IllegalArgumentException("You are not allowed to perform this action!");
+
         var title = titleRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Title with id " + id + " is not found"));
         titleRepo.delete(title);
 
