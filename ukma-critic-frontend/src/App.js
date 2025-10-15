@@ -3,7 +3,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Navbar from "./layout/Navbar";
 import UsersPage from "./pages/UsersPage";
 import {Route, Routes, BrowserRouter as Router} from "react-router-dom";
-import HomePage from "./pages/HomePage";
 import ViewUser from "./users/ViewUser";
 import UpdateUser from "./users/UpdateUser";
 import FilmsPage from "./pages/FilmsPage";
