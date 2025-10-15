@@ -16,3 +16,15 @@
     box-shadow: 0 10px 20px rgba(25, 11, 0, 100);
     border-color: var(--orange) !important;
 }
+
+.btn-card {
+    color: var(--orange-black);
+    background-color: var(--orange);
+    border-color: var(--orange-black);
+}
+
+.btn-card:hover {
+    color: var(--orange);
+    background-color: var(--orange-black);
+    border-color: var(--orange);
+}

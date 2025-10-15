@@ -33,11 +33,6 @@ export const AuthProvider = ({ children }) => {
                 setRole(userData.state ? 'manager' : 'client');
 
                 navigate(userData.state ? "/admin-page" : "/user-page");
-                // if (userData.state) {
-                //     navigate("/admin-page");
-                // } else {
-                //     navigate("/user-page");
-                // }
                 return;
             }
             throw new Error(res.message);
@@ -57,7 +52,8 @@ export const AuthProvider = ({ children }) => {
     const isAuthenticated = !!token;
 
     return (
-        <AuthContext.Provider value={{ token: token, role: role, isAuthenticated: isAuthenticated, login: loginAction, logout: logOut }}>
+        <AuthContext.Provider value={{ token: token, role: role, isAuthenticated: isAuthenticated,
+            login: loginAction, logout: logOut }}>
             {children}
         </AuthContext.Provider>
     );

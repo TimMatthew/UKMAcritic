@@ -12,6 +12,8 @@ export default function UpdateUser() {
     const [errors, setErrors] = useState({});
     const { id } = useParams();
     const navigate = useNavigate();
+    const [message, setMessage] = useState("");
+    const [messageType, setMessageType] = useState("success");
 
     useEffect(() => {
         loadUser();
@@ -78,62 +80,87 @@ export default function UpdateUser() {
     };
 
     return (
-        <div className="container" style={{ display: "flex", alignItems: "center", width: "88%" }}>
-            <div className="row" style={{ display: "flex", width: "100%" }}>
-                <div className="col-md-6 offset-md-3 border rounded p-4 mt-2 shadow">
-                    <h2 className="text-center m-4">Update User</h2>
-
-                    <form onSubmit={handleSubmit} noValidate>
-                        <div className="mb-3">
-                            <label htmlFor="userName" className="form-label">Name</label>
-                            <input
-                                type="text"
-                                className={`form-control ${errors.name ? "is-invalid" : ""}`}
-                                name="name"
-                                value={user.name}
-                                onChange={handleInputChange}
-                            />
-                            {errors.name && <div className="invalid-feedback">{errors.name}</div>}
+        <div className="container py-4">
+            <div className="row justify-content-center">
+                <div className="col-lg-6 col-md-8">
+                    <div className="card shadow border-0 rounded-4">
+                        <div className="card-header bg-warning text-white rounded-top-4">
+                            <h4 className="mb-0 text-center">
+                                <i className="bi bi-pencil-square me-2"></i>Update User
+                            </h4>
                         </div>
 
-                        <div className="mb-3">
-                            <label htmlFor="login" className="form-label">Login</label>
-                            <input
-                                type="text"
-                                className={`form-control ${errors.login ? "is-invalid" : ""}`}
-                                name="login"
-                                value={user.login}
-                                onChange={handleInputChange}
-                            />
-                            {errors.login && <div className="invalid-feedback">{errors.login}</div>}
-                        </div>
-
-                        <div className="mb-3">
-                            <div
-                                className="d-flex align-items-center gap-3 justify-content-center"
-                            >
-                                <span>Client</span>
-                                <div className="form-check form-switch">
-                                    <input
-                                        className="form-check-input"
-                                        name="state"
-                                        checked={user.state}
-                                        onChange={handleInputChange}
-                                        type="checkbox"
-                                        id="flexSwitchCheckDefault"
-                                    />
+                        <div className="card-body">
+                            {message && (
+                                <div
+                                    className={`alert alert-${messageType} alert-dismissible fade show`}
+                                    role="alert"
+                                >
+                                    {message}
+                                    <button
+                                        type="button"
+                                        className="btn-close"
+                                        onClick={() => setMessage("")}
+                                    ></button>
                                 </div>
-                                <span>Manager</span>
-                            </div>
-                        </div>
+                            )}
 
-                        <button type="submit" className="btn btn-success">
-                            Update
-                        </button>
-                        <Link className="btn btn-secondary mx-2" to="/users">
-                            Cancel
-                        </Link>
-                    </form>
+                            <form onSubmit={handleSubmit}>
+                                <div className="mb-3">
+                                    <label htmlFor="userName" className="form-label">Name</label>
+                                    <input
+                                        type="text"
+                                        className={`form-control ${errors.name ? "is-invalid" : ""}`}
+                                        name="name"
+                                        value={user.name}
+                                        onChange={handleInputChange}
+                                    />
+                                    {errors.name && <div className="invalid-feedback">{errors.name}</div>}
+                                </div>
+
+                                <div className="mb-3">
+                                    <label htmlFor="login" className="form-label">Login</label>
+                                    <input
+                                        type="text"
+                                        className={`form-control ${errors.login ? "is-invalid" : ""}`}
+                                        name="login"
+                                        value={user.login}
+                                        onChange={handleInputChange}
+                                    />
+                                    {errors.login && <div className="invalid-feedback">{errors.login}</div>}
+                                </div>
+
+                                <div className="mb-3">
+                                    <div
+                                        className="d-flex align-items-center gap-3 justify-content-center"
+                                    >
+                                        <span>Client</span>
+                                        <div className="form-check form-switch">
+                                            <input
+                                                className="form-check-input"
+                                                name="state"
+                                                checked={user.state}
+                                                onChange={handleInputChange}
+                                                type="checkbox"
+                                                id="flexSwitchCheckDefault"
+                                            />
+                                        </div>
+                                        <span>Manager</span>
+                                    </div>
+                                </div>
+
+                                <div className="d-flex justify-content-between">
+                                    <Link to="/users" className="btn btn-outline-secondary">
+                                        <i className="bi bi-arrow-left-circle me-1"></i> Back to Users
+                                    </Link>
+
+                                    <button type="submit" className="btn btn-primary">
+                                        <i className="bi bi-check-circle me-1"></i> Save Changes
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

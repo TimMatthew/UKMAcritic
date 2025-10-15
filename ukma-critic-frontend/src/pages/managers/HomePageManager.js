@@ -35,7 +35,7 @@ export default function HomePageManager() {
     ];
 
     return (
-        <div className="container py-5" style={{ minHeight: "100vh", }}>
+        <div className="container py-3">
             <motion.h1
                 className="text-center mb-5 fw-bold display-5 text-dark"
                 initial={{ opacity: 0, y: -30 }}
@@ -54,7 +54,7 @@ export default function HomePageManager() {
                         whileTap={{ scale: 0.98 }}
                     >
                         <div
-                            className={`card text-center shadow-sm h-100 ${section.border} card-hover`}
+                            className={`card text-center shadow-sm h-100 btn-card card-hover`}
                             style={{borderWidth: "3px"}}
                         >
                             <div className="card-body d-flex flex-column justify-content-center align-items-center p-4">
@@ -62,7 +62,7 @@ export default function HomePageManager() {
                                 <h5 className="card-title fw-bold mb-2">{section.title}</h5>
                                 <p className="card-text text-muted mb-4">{section.description}</p>
                                 <button
-                                    className={`btn ${section.btn} px-4`}
+                                    className={`btn px-4 btn-card`}
                                     onClick={() => navigate(section.path)}
                                 >
                                     Follow →
