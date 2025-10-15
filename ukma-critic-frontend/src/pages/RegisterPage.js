@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import './LoginPage.css';
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 export default function RegisterPage({ onRegister }) {
     const [name, setName] = useState("");
@@ -9,9 +9,11 @@ export default function RegisterPage({ onRegister }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [managerRole, setManagerRole] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     const validate = () => {
         if (!name) return "Enter your name";
@@ -37,6 +39,19 @@ export default function RegisterPage({ onRegister }) {
         setLoading(true);
         try {
             // here will be logic for registration
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/users`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ login: login, email: email, name: name, password: password, state: managerRole })
+            });
+            const res = await response.json();
+
+            if (res) {
+                alert("You registered successfully!");
+                navigate("/login");
+            }
+
+
             if (onRegister) onRegister({ name, email });
         } catch (err) {
             console.error(err);
@@ -55,7 +70,7 @@ export default function RegisterPage({ onRegister }) {
                         <div className="row g-0">
                             <div className="col-12 col-md-6">
                                 <div className="card-body p-4">
-                                    <h5 className="card-title mb-3 title-one">Registration</h5>
+                                    <h5 className="card-title mb-3 title-one">Registration of {managerRole ? "manager" : "client"}</h5>
 
                                     {error && (
                                         <div className="alert alert-danger py-2" role="alert">
@@ -83,7 +98,7 @@ export default function RegisterPage({ onRegister }) {
                                                 id="login"
                                                 type="text"
                                                 className="form-control"
-                                                value={name}
+                                                value={login}
                                                 onChange={(e) => setLogin(e.target.value)}
                                                 placeholder="Your login"
                                                 required
@@ -137,6 +152,25 @@ export default function RegisterPage({ onRegister }) {
                                                 placeholder="••••••••"
                                                 required
                                             />
+                                        </div>
+
+                                        <div className="mb-3">
+                                            <div
+                                                className="d-flex align-items-center gap-3 justify-content-center"
+                                            >
+                                                <span>Client</span>
+                                                <div className="form-check form-switch">
+                                                    <input
+                                                        className="form-check-input"
+                                                        name="state"
+                                                        checked={managerRole}
+                                                        onChange={(e) => setManagerRole(e.target.checked)}
+                                                        type="checkbox"
+                                                        id="flexSwitchCheckDefault"
+                                                    />
+                                                </div>
+                                                <span>Manager</span>
+                                            </div>
                                         </div>
 
                                         <div className="d-grid mb-3">

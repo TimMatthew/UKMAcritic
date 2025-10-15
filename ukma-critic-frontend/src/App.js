@@ -15,6 +15,7 @@ import {AuthProvider} from "./context/AuthProvider";
 import ProtectedRoute from "./context/ProtectedRoute";
 import RegisterPage from "./pages/RegisterPage";
 import {CookiesProvider} from "react-cookie";
+import HomePageManager from "./pages/managers/HomePageManager";
 
 
 function App() {
@@ -26,6 +27,17 @@ function App() {
                 <Routes>
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/register" element={<RegisterPage />} />
+
+                    {/*manager*/}
+
+                    <Route
+                        path="/admin-page"
+                        element={
+                            <ProtectedRoute>
+                                <HomePageManager />
+                            </ProtectedRoute>
+                        }
+                    />
 
                     <Route
                         path="/"

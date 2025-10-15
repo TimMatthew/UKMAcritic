@@ -40,19 +40,6 @@ export default function LoginPage() {
         setLoading(true);
         try {
             auth.login(input);
-            // const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/users/login`, {
-            //     method: "POST",
-            //     headers: { "Content-Type": "application/json" },
-            //     body: JSON.stringify({ login: username, password })
-            // });
-            //
-            // const data = await response.json();
-            // const token = data.token;
-            //
-            // console.log(token);
-            //
-            // login(token);
-            // navigate("/");
         } catch (err) {
             console.error(err);
             setError("Authorization failed. Please try again later.");
