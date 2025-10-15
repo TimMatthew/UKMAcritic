@@ -2,23 +2,31 @@ import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./LoginPage.css"
 import {Link} from "react-router-dom";
+import {useAuth} from "../context/AuthProvider";
 
 
 export default function LoginPage({ onLogin }) {
-    const [login, setLogin] = useState("");
-    const [password, setPassword] = useState("");
+    // const [username, setUsername] = useState("");
+    // const [password, setPassword] = useState("");
+    const [input, setInput] = useState({
+        username: "",
+        password: "",
+    });
     const [remember, setRemember] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    // const login = useAuth();
+    const auth = useAuth();
+    // const navigate = useNavigate();
 
     const validate = () => {
-        if (!login) return "Enter valid login";
+        if (!input.username) return "Enter valid login";
         // const re = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
         // if (!re.test(login)) return "Wrong email format";
-        if (login.length < 3) return "Login must be at least 3 characters";
-        if (!password) return "Enter your password";
-        if (password.length < 3) return "Password must be at least 6 characters";
+        if (input.username.length < 3) return "Login must be at least 3 characters";
+        if (!input.password) return "Enter your password";
+        if (input.password.length < 3) return "Password must be at least 6 characters";
         return null;
     };
 
@@ -33,15 +41,20 @@ export default function LoginPage({ onLogin }) {
 
         setLoading(true);
         try {
-            const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/users/login`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ login, password })
-            });
-
-            const data = await response.json();
-            if (onLogin) onLogin(data);
-            if (onLogin) onLogin({ email: login, remember });
+            auth.login(input);
+            // const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/users/login`, {
+            //     method: "POST",
+            //     headers: { "Content-Type": "application/json" },
+            //     body: JSON.stringify({ login: username, password })
+            // });
+            //
+            // const data = await response.json();
+            // const token = data.token;
+            //
+            // console.log(token);
+            //
+            // login(token);
+            // navigate("/");
         } catch (err) {
             console.error(err);
             setError("Authorization failed. Please try again later.");
@@ -86,11 +99,11 @@ export default function LoginPage({ onLogin }) {
                                                 id="login"
                                                 type="login"
                                                 className="form-control"
-                                                value={login}
-                                                onChange={(e) => setLogin(e.target.value)}
+                                                value={input.username}
+                                                onChange={(e) =>
+                                                    setInput({ ...input, username: e.target.value })}
                                                 placeholder="name"
                                                 required
-                                                aria-describedby="emailHelp"
                                             />
                                         </div>
 
@@ -104,8 +117,9 @@ export default function LoginPage({ onLogin }) {
                                                     id="password"
                                                     type={showPassword ? "text" : "password"}
                                                     className="form-control"
-                                                    value={password}
-                                                    onChange={(e) => setPassword(e.target.value)}
+                                                    value={input.password}
+                                                    onChange={(e) =>
+                                                        setInput({ ...input, password: e.target.value })}
                                                     placeholder="••••••••"
                                                     required
                                                 />

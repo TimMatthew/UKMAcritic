@@ -11,15 +11,15 @@ import AddFilms from "./films/AddFilms";
 import ViewFilmsList from "./films/ViewFilmsList";
 import UpdateFilm from "./films/UpdateFilm";
 import LoginPage from "./pages/LoginPage";
-import {AuthProvider} from "./auth/AuthProvider";
-import ProtectedRoute from "./auth/ProtectedRoute";
+import {AuthProvider} from "./context/AuthProvider";
+import ProtectedRoute from "./context/ProtectedRoute";
 import RegisterPage from "./pages/RegisterPage";
 
 
 function App() {
     return (
+        <Router>
         <AuthProvider>
-            <Router>
                 <Navbar />
                 <Routes>
                     <Route path="/login" element={<LoginPage />} />
@@ -90,8 +90,8 @@ function App() {
                         }
                     />
                 </Routes>
-            </Router>
         </AuthProvider>
+            </Router>
     );
 }
 
