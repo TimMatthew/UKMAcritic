@@ -5,9 +5,7 @@ import {Link} from "react-router-dom";
 import {useAuth} from "../context/AuthProvider";
 
 
-export default function LoginPage({ onLogin }) {
-    // const [username, setUsername] = useState("");
-    // const [password, setPassword] = useState("");
+export default function LoginPage() {
     const [input, setInput] = useState({
         username: "",
         password: "",
