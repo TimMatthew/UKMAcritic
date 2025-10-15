@@ -18,9 +18,9 @@ export default function HomePageManager() {
         },
         {
             title: "Users",
-            description: "View, edit, or delete users.",
+            description: "View, edit, or delete clients.",
             icon: <Users size={50} color="#fe9542" />,
-            path: "/users",
+            path: "/clients",
             border: "border-info",
             btn: "btn-outline-info",
         },

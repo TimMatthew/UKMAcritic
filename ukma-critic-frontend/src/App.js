@@ -16,6 +16,7 @@ import ProtectedRoute from "./context/ProtectedRoute";
 import RegisterPage from "./pages/RegisterPage";
 import {CookiesProvider} from "react-cookie";
 import HomePageManager from "./pages/managers/HomePageManager";
+import HomePageClient from "./pages/clients/HomePageClient";
 
 
 function App() {
@@ -28,7 +29,7 @@ function App() {
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/register" element={<RegisterPage />} />
 
-                    {/*manager*/}
+                    {/* manager */}
 
                     <Route
                         path="/admin-page"
@@ -39,14 +40,6 @@ function App() {
                         }
                     />
 
-                    <Route
-                        path="/"
-                        element={
-                            <ProtectedRoute>
-                                <HomePage />
-                            </ProtectedRoute>
-                        }
-                    />
                     <Route
                         path="/users"
                         element={
@@ -71,6 +64,7 @@ function App() {
                             </ProtectedRoute>
                         }
                     />
+
                     <Route
                         path="/films"
                         element={
@@ -103,6 +97,26 @@ function App() {
                             </ProtectedRoute>
                         }
                     />
+
+                    {/* client */}
+
+                    <Route
+                        path="/user-page"
+                        element={
+                            <ProtectedRoute>
+                                <HomePageClient />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    {/*<Route*/}
+                    {/*    path="/"*/}
+                    {/*    element={*/}
+                    {/*        <ProtectedRoute>*/}
+                    {/*            <HomePage />*/}
+                    {/*        </ProtectedRoute>*/}
+                    {/*    }*/}
+                    {/*/>*/}
                 </Routes>
         </AuthProvider>
             </CookiesProvider>
