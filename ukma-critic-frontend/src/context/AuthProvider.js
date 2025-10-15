@@ -8,6 +8,7 @@ export const AuthProvider = ({ children }) => {
     const [token, setToken] = useState(localStorage.getItem("site") || "");
     const navigate = useNavigate();
     const [cookies, setCookie] = useCookies(["jwt"]);
+    const [role, setRole] = useState(localStorage.getItem("role") || "");
 
     const loginAction = async (data) => {
         try {
@@ -28,11 +29,15 @@ export const AuthProvider = ({ children }) => {
                 });
 
                 const userData = await response_profile.json();
-                if (userData.state) {
-                    navigate("/admin-page");
-                } else {
-                    navigate("/user-page");
-                }
+                localStorage.setItem("role", userData.state ? 'manager' : 'client');
+                setRole(userData.state ? 'manager' : 'client');
+
+                navigate(userData.state ? "/admin-page" : "/user-page");
+                // if (userData.state) {
+                //     navigate("/admin-page");
+                // } else {
+                //     navigate("/user-page");
+                // }
                 return;
             }
             throw new Error(res.message);
@@ -43,14 +48,16 @@ export const AuthProvider = ({ children }) => {
 
     const logOut = () => {
         localStorage.removeItem("site");
+        localStorage.removeItem("role");
         setToken(null);
+        setRole(null);
         navigate("/login");
     };
 
     const isAuthenticated = !!token;
 
     return (
-        <AuthContext.Provider value={{ token, isAuthenticated, login: loginAction, logout: logOut }}>
+        <AuthContext.Provider value={{ token: token, role: role, isAuthenticated: isAuthenticated, login: loginAction, logout: logOut }}>
             {children}
         </AuthContext.Provider>
     );
