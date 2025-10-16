@@ -134,7 +134,11 @@ export default function LoginPage() {
                                                 </label>
                                             </div>
 
-                                            <a href="#" className="small">
+                                            <a
+                                                href="#"
+                                                className="small text-muted"
+                                                onClick={(e) => e.preventDefault()}
+                                            >
                                                 Forgot your password?
                                             </a>
                                         </div>

@@ -52,3 +52,8 @@ a {
     color: var(--lilac);
     border-color: var(--lilac);
 }
+
+.text-muted {
+    pointer-events: none;
+    opacity: 0.5;
+}
