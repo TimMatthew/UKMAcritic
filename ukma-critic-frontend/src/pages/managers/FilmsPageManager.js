@@ -48,9 +48,9 @@ export default function FilmsPageManager() {
             )}
 
             {!loading && !error && (
-                <div className="row g-4">
+                <div className="row">
                     {films.map((film) => (
-                        <div key={film.id} className="col-12 col-sm-6 col-md-4 col-lg-3">
+                        <div key={film.id} className="col-12 col-sm-6 col-md-4 col-lg-2 mb-4">
                             <Card
                                 className="h-100 shadow-sm film-card"
                                 style={{ cursor: "pointer" }}

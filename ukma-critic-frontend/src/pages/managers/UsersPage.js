@@ -45,7 +45,7 @@ export default function UsersPage() {
 
     return (
         <div className="container py-4">
-            <h2 className="mb-4 text-primary fw-semibold">User Management</h2>
+            <h2 className="mb-4 fw-semibold" style={{color: '#fe9542'}}>User Management</h2>
 
             {message && (
                 <div className={`alert alert-${messageType} alert-dismissible fade show`} role="alert">

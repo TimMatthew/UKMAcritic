@@ -40,8 +40,9 @@ export default function ModerateUsersCommentsPage () {
         }
     };
 
-    const deleteReview = async (id) => {
+    const deleteReview = async (userId, reviewId) => {
         // !to_change add deleting of comment
+        // @DeleteMapping("remove/{comment}/{user}")
     };
 
     return (
@@ -89,7 +90,7 @@ export default function ModerateUsersCommentsPage () {
                                         {/*</button>*/}
                                         <button
                                             className="btn btn-outline-danger btn-sm mx-1"
-                                            onClick={() => deleteReview(review.id)}
+                                            onClick={() => deleteReview(review.userId, review.id)}
                                         >
                                             <i className="bi bi-trash me-1"></i> Delete
                                         </button>
