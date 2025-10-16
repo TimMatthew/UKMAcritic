@@ -19,6 +19,7 @@ import HomePage from "./pages/HomePage";
 import FilmsPageManager from "./pages/managers/FilmsPageManager";
 import FilmInfoPageClient from "./pages/clients/FilmInfoPageClient";
 import ModerateUsersCommentsPage from "./pages/managers/ModerateUsersCommentsPage";
+import AllReviewsPage from "./pages/managers/AllReviewsPage";
 
 
 function App() {
@@ -81,6 +82,15 @@ function App() {
                         element={
                             <ProtectedRoute>
                                 <ModerateUsersCommentsPage />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/admin-page/comments/"
+                        element={
+                            <ProtectedRoute>
+                                <AllReviewsPage />
                             </ProtectedRoute>
                         }
                     />

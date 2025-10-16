@@ -78,7 +78,6 @@ export default function ModerateUsersCommentsPage () {
                             reviews.map((review, index) => (
                                 <tr key={review.id} style={{textAlign: 'left'}}>
                                     <td>{index + 1}</td>
-                                    {/*add name of film*/}
                                     <td>
                                         <div className="fw-bold">{filmsMap.get(review.titleId)}</div>
                                     </td>
@@ -90,7 +89,7 @@ export default function ModerateUsersCommentsPage () {
                                         {/*</button>*/}
                                         <button
                                             className="btn btn-outline-danger btn-sm mx-1"
-                                            onClick={() => deleteReview(review.id, review.name)}
+                                            onClick={() => deleteReview(review.id)}
                                         >
                                             <i className="bi bi-trash me-1"></i> Delete
                                         </button>
