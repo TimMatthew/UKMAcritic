@@ -50,7 +50,7 @@ function App() {
                     />
 
                     <Route
-                        path="/users"
+                        path="/admin-page/users"
                         element={
                             <ProtectedRoute>
                                 <UsersPage />
@@ -58,7 +58,7 @@ function App() {
                         }
                     />
                     <Route
-                        path="/users/view_user/:id"
+                        path="/admin-page/users/view_user/:id"
                         element={
                             <ProtectedRoute>
                                 <ViewUser />
@@ -66,7 +66,7 @@ function App() {
                         }
                     />
                     <Route
-                        path="/users/update_user/:id"
+                        path="/admin-page/users/update_user/:id"
                         element={
                             <ProtectedRoute>
                                 <UpdateUser />

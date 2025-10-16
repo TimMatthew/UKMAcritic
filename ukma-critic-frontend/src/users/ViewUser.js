@@ -37,8 +37,8 @@ export default function ViewUser() {
                         </div>
 
                         <div className="card-footer text-center bg-light">
-                            <Link to={`/users/update_user/${id}`} className="btn btn-sm btn-outline-success">
-                                <i className="bi bi-arrow-left-circle me-1"></i> Change
+                            <Link to={`/admin-page/users/update_user/${id}`} className="btn btn-sm btn-outline-success">
+                                <i className="bi bi-pencil me-1"></i> Change
                             </Link>
                         </div>
 
@@ -68,7 +68,7 @@ export default function ViewUser() {
                         </div>
 
                         <div className="card-footer text-center bg-light">
-                            <Link to="/users" className="btn btn-outline-primary">
+                            <Link to="/admin-page/users" className="btn btn-outline-primary">
                                 <i className="bi bi-arrow-left-circle me-1"></i> Back to Users
                             </Link>
                         </div>

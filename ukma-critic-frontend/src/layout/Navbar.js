@@ -43,10 +43,10 @@ export default function Navbar() {
                     {role === "manager" && (
                         <>
                         <li className="nav-item">
-                                <Link className="nav-link" to="/users">Users</Link>
+                                <Link className="nav-link" to="/admin-page/users">Users</Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to="/comments">Reviews</Link>
+                                <Link className="nav-link" to="/admin-page/comments">Reviews</Link>
                             </li>
                         </>
                     )}

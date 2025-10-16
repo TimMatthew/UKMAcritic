@@ -84,11 +84,13 @@ export default function UsersPage() {
                                     <td>{user.login}</td>
                                     <td>{user.state ? "Manager" : "Client"}</td>
                                     <td className="text-left" >
-                                        <Link to={`/users/view_user/${user.id}`} className="btn btn-outline-primary btn-sm mx-1">
+                                        <Link to={`/admin-page/users/view_user/${user.id}`}
+                                              className="btn btn-outline-primary btn-sm mx-1">
                                             <i className="bi bi-eye me-1"></i> View
                                         </Link>
 
-                                        <Link to={`/users/update_user/${user.id}`} className="btn btn-outline-secondary btn-sm mx-1">
+                                        <Link to={`/admin-page/users/update_user/${user.id}`}
+                                              className="btn btn-outline-secondary btn-sm mx-1">
                                             <i className="bi bi-pencil me-1"></i> Update
                                         </Link>
 
@@ -113,11 +115,11 @@ export default function UsersPage() {
                 </div>
             </div>
 
-            <div className="text-end">
-                <Link to={`/users/update_user/$s}`} className="btn btn-success">
-                    <i className="bi bi-plus-lg me-1"></i> Create new user
-                </Link>
-            </div>
+            {/*<div className="text-end">*/}
+            {/*    <Link to={`/users/update_user/$s}`} className="btn btn-success">*/}
+            {/*        <i className="bi bi-plus-lg me-1"></i> Create new user*/}
+            {/*    </Link>*/}
+            {/*</div>*/}
         </div>
     );
 }

@@ -72,7 +72,7 @@ export default function UpdateUser() {
         try {
             await api.put(`/users/${id}`, user);
             alert("User updated successfully!");
-            navigate("/users");
+            navigate("/admin-page/users");
         } catch (err) {
             console.error("Error updating user:", err);
             alert("Failed to update user");
@@ -150,7 +150,7 @@ export default function UpdateUser() {
                                 </div>
 
                                 <div className="d-flex justify-content-between">
-                                    <Link to="/users" className="btn btn-outline-secondary">
+                                    <Link to="/admin-page/users" className="btn btn-outline-secondary">
                                         <i className="bi bi-arrow-left-circle me-1"></i> Back to Users
                                     </Link>
 
