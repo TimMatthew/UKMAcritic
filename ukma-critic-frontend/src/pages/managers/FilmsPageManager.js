@@ -58,7 +58,9 @@ export default function FilmsPageManager() {
                             >
                                 <Card.Img
                                     variant="top"
-                                    src={`https://image.tmdb.org/t/p/w500${film.tmdb_image_url}`}
+                                    src={film.tmdb_image_url ?
+                                        `https://image.tmdb.org/t/p/w500${film.tmdb_image_url}` :
+                                        '/images/placeholder.png'}
                                     alt={film.titleName}
                                     style={{ height: "350px", objectFit: "cover" }}
                                 />
@@ -87,7 +89,9 @@ export default function FilmsPageManager() {
                             <div className="row">
                                 <div className="col-md-5">
                                     <img
-                                        src={`https://image.tmdb.org/t/p/w500${selectedFilm.tmdb_image_url}`}
+                                        src={selectedFilm.tmdb_image_url ?
+                                            `https://image.tmdb.org/t/p/w500${selectedFilm.tmdb_image_url}` :
+                                            '/images/placeholder.png'}
                                         alt={selectedFilm.titleName}
                                         className="img-fluid rounded shadow-sm"
                                     />
