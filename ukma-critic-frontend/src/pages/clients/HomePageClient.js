@@ -6,6 +6,8 @@ import api from "../../api/AxiosConfig";
 
 export default function HomePageClient() {
     const [films, setFilms] = useState([]);
+    const [genres, setGenres] = useState([]);
+    const [selectedGenre, setSelectedGenre] = useState(null);
     const [favorites, setFavorites] = useState([]);
     const [search, setSearch] = useState("");
 
@@ -17,14 +19,31 @@ export default function HomePageClient() {
         try {
             const response = await api.get("/titles");
             setFilms(response.data);
+
+            const allGenres = response.data.flatMap((item) => item.genres);
+            const uniqueGenres = [...new Set(allGenres)];
+            setGenres(uniqueGenres);
+
+            console.log(uniqueGenres);
         } catch (err) {
             console.error("Failed to load films", err);
         }
     };
 
-    const filteredFilms = films.filter((film) =>
-        film.titleName.toLowerCase().includes(search.toLowerCase())
-    );
+    const filteredFilms = films.filter((film) => {
+        const matchesTitle = film.titleName
+            .toLowerCase()
+            .includes(search.toLowerCase());
+
+        const matchesGenre =
+            !selectedGenre ||
+            (film.genres &&
+                film.genres.some((g) =>
+                    g.toLowerCase().includes(selectedGenre.toLowerCase())
+                ));
+
+        return matchesTitle && matchesGenre;
+    });
 
     const toggleFavorite = (filmId) => {
         // !to_change here add "add to favourite" logic from database
@@ -33,6 +52,10 @@ export default function HomePageClient() {
         } else {
             setFavorites([...favorites, filmId]);
         }
+    };
+
+    const handleClickGenres = (genre) => {
+        setSelectedGenre((prev) => (prev === genre ? null : genre));
     };
 
     return (
@@ -46,6 +69,18 @@ export default function HomePageClient() {
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                 />
+            </div>
+
+            <div className="flex flex-wrap gap-2 mt-4" style={{display: "flex", justifyContent: "center"}}>
+                {genres.map((genre) => (
+                    <span
+                        key={genre}
+                        className={`genre-chip ${selectedGenre === genre ? "active" : ""}`}
+                        onClick={() => setSelectedGenre(selectedGenre === genre ? null : genre)}
+                    >
+                      {genre}
+                    </span>
+                ))}
             </div>
 
 

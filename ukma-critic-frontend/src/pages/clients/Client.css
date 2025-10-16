@@ -40,3 +40,41 @@
 .search-wrapper .search-input:focus {
     box-shadow: 0 0 8px rgba(208, 208, 244, 0.4);
 }
+
+.genre-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    padding: 12px;
+}
+
+.genre-chip {
+    padding: 6px 16px;
+    border-radius: 9999px;
+    background: var(--orange-white);
+    color: var(--orange);
+    font-size: 14px;
+    font-weight: 500;
+    border: 1px solid var(--yellowish-white);
+    cursor: pointer;
+    user-select: none;
+    margin-right: 10px;
+
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.genre-chip:hover {
+    background: var(--yellowish-white);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(25, 11, 0, 0.15);
+}
+
+.genre-chip.active {
+    background: var(--orange);
+    border-color: var(--orange-black);
+    color: var(--orange-black);
+    box-shadow: 0 4px 10px rgba(254, 149, 66, 0.4);
+    transform: scale(1.05);
+}
+
