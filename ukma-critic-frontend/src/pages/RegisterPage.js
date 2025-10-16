@@ -38,7 +38,6 @@ export default function RegisterPage({ onRegister }) {
 
         setLoading(true);
         try {
-            // here will be logic for registration
             const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/users`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -62,7 +61,7 @@ export default function RegisterPage({ onRegister }) {
     };
 
     return (
-        <div className="login-container py-4">
+        <div className="login-container py-4 login-page">
             <div className="container">
             <div className="row justify-content-center">
                 <div className="col-12 col-sm-12 col-md-10 col-lg-8">

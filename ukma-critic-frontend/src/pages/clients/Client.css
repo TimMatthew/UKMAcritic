@@ -6,3 +6,37 @@
     --orange-black: #190b00;
     --orange-white: #f1e7e0;
 }
+
+.search-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    border-radius: 50px;
+    overflow: hidden;
+}
+
+.search-wrapper .search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+    font-size: 1.2rem;
+    pointer-events: none;
+}
+
+.search-wrapper .search-input {
+    width: 100%;
+    padding: 10px 20px 10px 45px;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    border-radius: 50px;
+    transition: box-shadow 0.2s ease;
+}
+
+.search-wrapper .search-input:focus {
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.4);
+}

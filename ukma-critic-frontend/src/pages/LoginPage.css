@@ -36,9 +36,9 @@ a {
     background-color: var(--orange-white);
 }
 
-input {
-    background-color: var(--yellowish-white) !important;
-    border-color: var(--orange-black) !important;
+.login-page input {
+    background-color: var(--yellowish-white);
+    border-color: var(--orange-black);
 }
 
 .btn-outline-secondary {
