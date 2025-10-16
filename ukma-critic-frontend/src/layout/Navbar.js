@@ -36,7 +36,7 @@ export default function Navbar() {
                     {/*change url for users*/}
                     {role === "client" && (
                         <li className="nav-item">
-                            <Link className="nav-link" to="/films">Films</Link>
+                            <Link className="nav-link" to="/user-page/favourite-films">Favourite films</Link>
                         </li>
                     )}
 
@@ -53,7 +53,7 @@ export default function Navbar() {
 
                     {role === "client" && (
                         <li className="nav-item">
-                            <Link className="nav-link" to="/profile">My profile</Link>
+                            <Link className="nav-link" to="/user-page/profile">My profile</Link>
                         </li>
                     )}
                 </ul>
