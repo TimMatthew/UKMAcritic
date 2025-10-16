@@ -54,10 +54,6 @@ export default function HomePageClient() {
         }
     };
 
-    const handleClickGenres = (genre) => {
-        setSelectedGenre((prev) => (prev === genre ? null : genre));
-    };
-
     return (
         <div className="container py-4">
             <div className="search-wrapper mb-4">

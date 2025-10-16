@@ -9,6 +9,7 @@ export const AuthProvider = ({ children }) => {
     const navigate = useNavigate();
     const [cookies, setCookie] = useCookies(["jwt"]);
     const [role, setRole] = useState(localStorage.getItem("role") || "");
+    const [user, setUser] = useState(localStorage.getItem("user") || "");
 
     const loginAction = async (data) => {
         try {
@@ -31,6 +32,8 @@ export const AuthProvider = ({ children }) => {
                 const userData = await response_profile.json();
                 localStorage.setItem("role", userData.state ? 'manager' : 'client');
                 setRole(userData.state ? 'manager' : 'client');
+                localStorage.setItem("user", JSON.stringify(userData));
+
 
                 navigate(userData.state ? "/admin-page" : "/user-page");
                 return;
@@ -44,8 +47,10 @@ export const AuthProvider = ({ children }) => {
     const logOut = () => {
         localStorage.removeItem("site");
         localStorage.removeItem("role");
+        localStorage.removeItem("user");
         setToken(null);
         setRole(null);
+        setUser(null);
         navigate("/login");
     };
 
@@ -53,7 +58,7 @@ export const AuthProvider = ({ children }) => {
 
     return (
         <AuthContext.Provider value={{ token: token, role: role, isAuthenticated: isAuthenticated,
-            login: loginAction, logout: logOut }}>
+            login: loginAction, logout: logOut, user: user }}>
             {children}
         </AuthContext.Provider>
     );

@@ -78,3 +78,10 @@
     transform: scale(1.05);
 }
 
+.review-body {
+    background: var(--orange-white);
+}
+.review-body .title-name {
+    color: var(--orange);
+}
+
