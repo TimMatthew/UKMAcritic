@@ -1,7 +1,7 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Navbar from "./layout/Navbar";
-import UsersPage from "./pages/UsersPage";
+import UsersPage from "./pages/managers/UsersPage";
 import {Route, Routes, BrowserRouter as Router} from "react-router-dom";
 import ViewUser from "./users/ViewUser";
 import UpdateUser from "./users/UpdateUser";
@@ -18,6 +18,7 @@ import HomePageClient from "./pages/clients/HomePageClient";
 import HomePage from "./pages/HomePage";
 import FilmsPageManager from "./pages/managers/FilmsPageManager";
 import FilmInfoPageClient from "./pages/clients/FilmInfoPageClient";
+import ModerateUsersCommentsPage from "./pages/managers/ModerateUsersCommentsPage";
 
 
 function App() {
@@ -71,6 +72,15 @@ function App() {
                         element={
                             <ProtectedRoute>
                                 <UpdateUser />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/admin-page/users/comments/:id"
+                        element={
+                            <ProtectedRoute>
+                                <ModerateUsersCommentsPage />
                             </ProtectedRoute>
                         }
                     />

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import api from "../api/AxiosConfig";
+import api from "../../api/AxiosConfig";
 
 export default function UsersPage() {
     const [users, setUsers] = useState([]);
@@ -102,9 +102,10 @@ export default function UsersPage() {
                                         </button>
 
                                         {!user.state && (
-                                            <button className="btn btn-outline-success btn-sm mx-1">
+                                            <Link className="btn btn-outline-success btn-sm mx-1"
+                                            to={`/admin-page/users/comments/${user.id}`}>
                                                 <i className="bi bi-chat-dots me-1"></i> Comments
-                                            </button>
+                                            </Link>
                                         )}
                                     </td>
                                 </tr>
