@@ -91,26 +91,26 @@ function App() {
                         }
                     />
 
-
-
-
-
                     <Route
-                        path="/films/add"
+                        path="/admin-page/films/add"
                         element={
                             <ProtectedRoute>
                                 <AddFilms />
                             </ProtectedRoute>
                         }
                     />
-                    <Route
-                        path="/films/all-films"
-                        element={
-                            <ProtectedRoute>
-                                <ViewFilmsList />
-                            </ProtectedRoute>
-                        }
-                    />
+
+
+
+
+                    {/*<Route*/}
+                    {/*    path="/films/all-films"*/}
+                    {/*    element={*/}
+                    {/*        <ProtectedRoute>*/}
+                    {/*            <ViewFilmsList />*/}
+                    {/*        </ProtectedRoute>*/}
+                    {/*    }*/}
+                    {/*/>*/}
 
 
                     {/* client */}

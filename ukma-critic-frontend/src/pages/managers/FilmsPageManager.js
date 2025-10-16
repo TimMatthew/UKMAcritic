@@ -30,6 +30,12 @@ export default function FilmsPageManager() {
     return (
         <div className="container py-5">
             <h2 className="mb-4 text-center">Films management page</h2>
+            <div style={{display: 'flex', margin: '20px', justifyContent: 'center'}}>
+                <Link type="button" to={`/admin-page/films/add`}
+                      className="btn btn-primary"
+                      style={{backgroundColor: 'white', color: 'blue', borderColor: 'blue'}}
+                >Add new films</Link>
+            </div>
 
             {loading && (
                 <div className="text-center py-5">

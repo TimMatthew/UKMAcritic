@@ -11,6 +11,8 @@ export default function AddFilms() {
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [selectedFilm, setSelectedFilm] = useState(null);
+    const [message, setMessage] = useState("");
+    const [messageType, setMessageType] = useState("success");
 
     useEffect(() => {
         getFilms(page);
@@ -39,6 +41,63 @@ export default function AddFilms() {
     };
 
     const handleAddToDatabase = async (film) => {
+        try {
+            const token = localStorage.getItem("site");
+
+            console.log(film);
+
+            const response = await fetch(
+                `${process.env.REACT_APP_BACKEND_BASE_URL}/titles/`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    credentials: "include",
+                    body: JSON.stringify({
+                        titleName: film.titleName,
+                        genres: film.genres,
+                        releaseYear: film.releaseYear,
+                        rating: film.rating,
+                        directors: film.directors,
+                        actors: film.actors,
+                        tmdb_image_url: film.posterPath,
+                        tmdb: film.idTmdb,
+                        overview: film.overview,
+                        regions: film.regions
+                    }),
+                }
+            );
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(errorText || "Failed to create film");
+            }
+
+            const createdFilm = await response.json();
+            console.log("Created film:", createdFilm);
+
+            showMessage("Film added to database successfully", "success");
+            setTimeout(() => {
+                const modal = new Modal(
+                    document.getElementById("filmModal")
+                );
+                modal.hide();
+            }, 1500);
+        } catch (err) {
+            console.error(err);
+            showMessage("Failed to update film", "danger");
+        }
+    }
+
+    const showMessage = (text, type) => {
+        setMessage(text);
+        setMessageType(type);
+        setTimeout(() => setMessage(""), 3000);
+    };
+
+    const handleOpenFilm = async (film) => {
         try {
             const creditsRes = await axios.get(
                 `${process.env.REACT_APP_MOVIE_API_CALL}/${film.id}/credits`,
@@ -69,8 +128,6 @@ export default function AddFilms() {
 
             const actors = credits.cast.map((a) => a.name);
             const genres = details.genres.map((g) => g.name);
-
-            console.log(details);
 
             const filmData = {
                 directors,
@@ -156,7 +213,7 @@ export default function AddFilms() {
                                 />
                                 <button
                                     className="add-btn btn btn-success position-absolute top-50 start-50 translate-middle"
-                                    onClick={() => handleAddToDatabase(film)}
+                                    onClick={() => handleOpenFilm(film)}
                                 >
                                     Add to database
                                 </button>
@@ -215,6 +272,19 @@ export default function AddFilms() {
                             ></button>
                         </div>
                         <div className="modal-body">
+                            {message && (
+                                <div
+                                    className={`alert alert-${messageType} alert-dismissible fade show`}
+                                    role="alert"
+                                >
+                                    {message}
+                                    <button
+                                        type="button"
+                                        className="btn-close"
+                                        onClick={() => setMessage("")}
+                                    ></button>
+                                </div>
+                            )}
                             {selectedFilm ? (
                                 <div className="container-fluid">
                                     <div className="row">
@@ -276,7 +346,7 @@ export default function AddFilms() {
                         </div>
 
                         <div className="modal-footer">
-                            <button type="button" className="btn btn-primary">
+                            <button type="button" className="btn btn-primary" onClick={() =>handleAddToDatabase(selectedFilm)}>
                                 Add to database
                             </button>
                         </div>
