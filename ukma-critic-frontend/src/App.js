@@ -5,7 +5,6 @@ import UsersPage from "./pages/UsersPage";
 import {Route, Routes, BrowserRouter as Router} from "react-router-dom";
 import ViewUser from "./users/ViewUser";
 import UpdateUser from "./users/UpdateUser";
-import FilmsPage from "./pages/FilmsPage";
 import AddFilms from "./films/AddFilms";
 import ViewFilmsList from "./films/ViewFilmsList";
 import UpdateFilm from "./films/UpdateFilm";

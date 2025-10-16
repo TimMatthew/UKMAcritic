@@ -50,13 +50,12 @@ export default function FilmsPageManager() {
                                 style={{ cursor: "pointer" }}
                                 onClick={() => handleOpenFilm(film)}
                             >
-                                {/*!to_change  add poster*/}
-                                {/*<Card.Img*/}
-                                {/*    variant="top"*/}
-                                {/*    src={film.poster}*/}
-                                {/*    alt={film.title}*/}
-                                {/*    style={{ height: "350px", objectFit: "cover" }}*/}
-                                {/*/>*/}
+                                <Card.Img
+                                    variant="top"
+                                    src={`https://image.tmdb.org/t/p/w500${film.tmdb_image_url}`}
+                                    alt={film.titleName}
+                                    style={{ height: "350px", objectFit: "cover" }}
+                                />
                                 <Card.Body>
                                     <Card.Title className="text-truncate">{film.titleName}</Card.Title>
                                     <Card.Text className="text-muted mb-1">
@@ -81,18 +80,19 @@ export default function FilmsPageManager() {
                         <Modal.Body>
                             <div className="row">
                                 <div className="col-md-5">
-                                    {/*!to_change add poster*/}
-                                    {/*<img*/}
-                                    {/*    src={selectedFilm.poster}*/}
-                                    {/*    alt={selectedFilm.title}*/}
-                                    {/*    className="img-fluid rounded shadow-sm"*/}
-                                    {/*/>*/}
+                                    <img
+                                        src={`https://image.tmdb.org/t/p/w500${selectedFilm.tmdb_image_url}`}
+                                        alt={selectedFilm.titleName}
+                                        className="img-fluid rounded shadow-sm"
+                                    />
                                 </div>
                                 <div className="col-md-7">
                                     <h5 className="mt-3 mt-md-0">Information</h5>
-                                    <p><strong>Рік:</strong> {selectedFilm.releaseYear}</p>
-                                    <p><strong>Жанр:</strong> {selectedFilm.genres.join(', ') | '-'}</p>
-                                    <p><strong>Рейтинг:</strong> ⭐ {selectedFilm.rating}</p>
+                                    <p><strong>Year:</strong> {selectedFilm.releaseYear}</p>
+                                    <p><strong>Genres:</strong> {selectedFilm.genres ? selectedFilm.genres.join(', ') : '-'}</p>
+                                    <p><strong>Actors:</strong> {selectedFilm.actors ? selectedFilm.actors.join(', ') : '-'}</p>
+                                    <p><strong>Directors:</strong> {selectedFilm.directors ? selectedFilm.directors.join(', ') : '-'}</p>
+                                    <p><strong>Rating:</strong> ⭐ {selectedFilm.rating}</p>
                                     <p>{selectedFilm.overview}</p>
                                 </div>
                             </div>
