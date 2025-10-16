@@ -5,6 +5,7 @@ import org.spring.ukmacritic.dto.title.TitleResponseDto;
 import org.spring.ukmacritic.dto.title.TitleUpsertDto;
 import org.spring.ukmacritic.entities.Title;
 import org.spring.ukmacritic.repos.TitleRepo;
+import org.spring.ukmacritic.security.JWTUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,20 +16,28 @@ import java.util.UUID;
 public class TitleService {
 
     private final TitleRepo titleRepo;
+    private final JWTUtils jwt;
 
-    public UUID create(TitleUpsertDto title){
+    public UUID create(TitleUpsertDto title, String token){
+
+        String roleFromToken = jwt.extractRole(token);
+
+        if(roleFromToken.equals("false"))
+            throw new IllegalArgumentException("You are not allowed to perform this action!");
+
+        String tmdb = generateUniqueTmdbId();
 
         var titleEntity = Title.builder()
-                .directors(title.directors())
-                .genres(title.genres())
-                .actors(title.actors())
-                .regions(title.regions())
+                .tmdbId(tmdb)
                 .titleName(title.titleName())
                 .overview(title.overview())
+                .keywords(title.keywords())
+                .genres(title.genres())
+                .actors(title.actors())
+                .director(title.director())
                 .releaseYear(title.releaseYear())
                 .rating(title.rating())
-                .idTmdb(title.tmdb())
-                .imageUrl(title.tmdb_image_url())
+                .imageUrl(title.imageUrl())
                 .build();
 
         titleEntity = titleRepo.saveAndFlush(titleEntity);
@@ -47,25 +56,37 @@ public class TitleService {
                 .toList();
     }
 
-    public TitleUpsertDto update(UUID id, TitleUpsertDto dto){
+    public TitleUpsertDto update(UUID id, TitleUpsertDto dto, String token){
+
+        String roleFromToken = jwt.extractRole(token);
+
+        if(roleFromToken.equals("false"))
+            throw new IllegalArgumentException("You are not allowed to perform this action!");
+
         var title = titleRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Title with id " + id + " is not found"));
 
-        title.setDirectors(dto.directors());
-        title.setGenres(dto.genres());
-        title.setActors(dto.actors());
-        title.setRegions(dto.regions());
         title.setTitleName(dto.titleName());
         title.setOverview(dto.overview());
+        title.setKeywords(dto.keywords());
+        title.setGenres(dto.genres());
+        title.setActors(dto.actors());
+        title.setDirector(dto.director());
         title.setReleaseYear(dto.releaseYear());
-        title.setIdTmdb(dto.tmdb());
-        title.setImageUrl(dto.tmdb_image_url());
+        title.setRating(dto.rating());
+        title.setImageUrl(dto.imageUrl());
 
         titleRepo.saveAndFlush(title);
 
         return titleEntityToUpsertDTO(title);
     }
 
-    public boolean delete(UUID id){
+    public boolean delete(UUID id, String token){
+
+        String roleFromToken = jwt.extractRole(token);
+
+        if(roleFromToken.equals("false"))
+            throw new IllegalArgumentException("You are not allowed to perform this action!");
+
         var title = titleRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Title with id " + id + " is not found"));
         titleRepo.delete(title);
 
@@ -76,30 +97,41 @@ public class TitleService {
     // --------------------------- HELPERS ---------------------------
     private TitleUpsertDto titleEntityToUpsertDTO(Title t){
         return TitleUpsertDto.builder()
-                .directors(t.getDirectors())
-                .genres(t.getGenres())
-                .actors(t.getActors())
-                .regions(t.getRegions())
                 .titleName(t.getTitleName())
                 .overview(t.getOverview())
+                .keywords(t.getKeywords())
+                .genres(t.getGenres())
+                .actors(t.getActors())
+                .director(t.getDirector())
                 .releaseYear(t.getReleaseYear())
-                .tmdb(t.getIdTmdb())
-                .tmdb_image_url(t.getImageUrl())
+                .rating(t.getRating())
+                .imageUrl(t.getImageUrl())
                 .build();
     }
 
     private TitleResponseDto titleEntityToResponseDTO(Title t){
         return TitleResponseDto.builder()
                 .id(t.getTitleId())
-                .directors(t.getDirectors())
-                .genres(t.getGenres())
-                .actors(t.getActors())
-                .regions(t.getRegions())
                 .titleName(t.getTitleName())
                 .overview(t.getOverview())
+                .keywords(t.getKeywords())
+                .genres(t.getGenres())
+                .actors(t.getActors())
+                .director(t.getDirector())
                 .releaseYear(t.getReleaseYear())
-                .tmdb(t.getIdTmdb())
-                .tmdb_image_url(t.getImageUrl())
+                .rating(t.getRating())
+                .imageUrl(t.getImageUrl())
                 .build();
     }
+
+    private String generateUniqueTmdbId() {
+        String tmdbId;
+        do {
+            long randomNumber = (long) (Math.random() * 1_000_000L);
+            tmdbId = String.valueOf(randomNumber);
+        } while (titleRepo.existsByTmdbId(tmdbId));
+
+        return tmdbId;
+    }
+
 }

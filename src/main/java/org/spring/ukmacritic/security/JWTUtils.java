@@ -23,14 +23,14 @@ public class JWTUtils {
                 .setSubject(String.valueOf(user.userId()))
 //                .claim("login", user.login())
 //                .claim("name", user.userName())
-                .claim("role", user.state())
+                .claim("role", String.valueOf(user.state()))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1 hour
                 .signWith(SECRET, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    private Claims extractToken(String token) {
+    public Claims extractToken(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(SECRET)
                 .build()
@@ -39,7 +39,7 @@ public class JWTUtils {
     }
 
     public String extractUserId(String token) {
-        return extractToken(token).getSubject(); // the subject is userId
+        return extractToken(token).getSubject();
     }
 
 //    public String extractLogin(String token) {
@@ -53,9 +53,9 @@ public class JWTUtils {
     public String extractRole(String token) {
         return extractToken(token).get("role", String.class);
     }
-    public boolean validateToken(String token, String userId) {
-        return userId.equals(extractUserId(token)) && !isTokenExpired(token);
-    }
+//    public boolean validateToken(String token, String userId) {
+//        return userId.equals(extractUserId(token)) && !isTokenExpired(token);
+//    }
 
     private boolean isTokenExpired(String token) {
         Date expiration = Jwts.parserBuilder()

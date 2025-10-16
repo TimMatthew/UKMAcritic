@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.spring.ukmacritic.dto.user.*;
 import org.spring.ukmacritic.entities.User;
 import org.spring.ukmacritic.repos.UserRepo;
+import org.spring.ukmacritic.security.JWTUtils;
 import org.spring.ukmacritic.security.PasswordUtils;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ public class UserService {
 
     private final UserRepo userRepo;
     private final PasswordUtils pwdUtils;
+    private final JWTUtils jwt;
 
     public UserResponseDto authenticate(UserAuthDto dto) {
         var user = userRepo.findByLogin(dto.login())
@@ -64,8 +66,17 @@ public class UserService {
     }
 
 
-    public UserResponseDto update(UUID id, UserUpdateDto dto){
+    public UserResponseDto update(UUID id, UserUpdateDto dto, String token){
+
+        String roleFromToken = jwt.extractRole(token);
+        String authenticatedUserId = jwt.extractUserId(token);
+
+
         var user = userRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("User with id " + id + " is not found"));
+        String userId = String.valueOf(user.getUserId());
+
+        if(!userId.equals(authenticatedUserId))
+            throw new IllegalArgumentException("User with the following email already exists");
 
         user.setName(dto.name());
         user.setLogin(dto.login());
@@ -78,8 +89,19 @@ public class UserService {
         return null;
     }
 
-    public boolean delete(UUID id){
+    public boolean delete(UUID id, String token){
+
+        String roleFromToken = jwt.extractRole(token);
+        String authenticatedUserId = jwt.extractUserId(token);
+
         var user = userRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("User with id " + id + " is not found"));
+        String userId = String.valueOf(user.getUserId());
+        boolean isClient = roleFromToken.equals("false");
+        boolean idsAreEqual = userId.equals(authenticatedUserId);
+
+        if(isClient && !idsAreEqual)
+            throw new IllegalArgumentException("User with the following email already exists");
+
         userRepo.delete(user);
         return true;
     }
@@ -90,7 +112,7 @@ public class UserService {
         return UserTestDto.builder()
                 .id(u.getUserId())
                 .email(u.getEmail())
-                .password(u.getLogin())
+                .password(u.getPassword())
                 .login(u.getLogin())
                 .name(u.getName())
                 .state(u.isState())

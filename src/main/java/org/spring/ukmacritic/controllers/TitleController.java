@@ -17,8 +17,8 @@ public class TitleController {
     private final TitleService titleService;
 
     @PostMapping
-    public UUID create(@RequestBody TitleUpsertDto title) {
-        return titleService.create(title);
+    public UUID create(@RequestBody TitleUpsertDto title, @CookieValue(name="jwt") String token) {
+        return titleService.create(title, token);
     }
 
     @GetMapping("{id}")
@@ -32,12 +32,12 @@ public class TitleController {
     }
 
     @PutMapping("{id}")
-    public TitleUpsertDto update(@PathVariable UUID id, @RequestBody TitleUpsertDto dto) {
-        return titleService.update(id, dto);
+    public TitleUpsertDto update(@PathVariable UUID id, @RequestBody TitleUpsertDto dto, @CookieValue(name="jwt") String jwtToken) {
+        return titleService.update(id, dto, jwtToken);
     }
 
     @DeleteMapping("{id}")
-    public boolean delete(@PathVariable UUID id) {
-        return titleService.delete(id);
+    public boolean delete(@PathVariable UUID id, @CookieValue(name="jwt") String jwtToken) {
+        return titleService.delete(id, jwtToken);
     }
 }

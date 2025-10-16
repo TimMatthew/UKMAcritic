@@ -33,6 +33,6 @@ public class Comment {
     @Column(name = "rating", nullable = false)
     private byte rating;
 
-    @Column(name = "info", columnDefinition = "text")
+    @Column(name = "info_t", columnDefinition = "text")
     private String info;
 }
