@@ -108,7 +108,7 @@ export default function HomePageClient() {
                                 ❤️
                             </button>
 
-                            <Link to={`/films/${film.id}`} className="text-decoration-none text-dark">
+                            <Link to={`/user-page/films/info/${film.id}`} className="text-decoration-none text-dark">
                                 <img
                                     src={film.tmdb_image_url ?
                                         `https://image.tmdb.org/t/p/w500${film.tmdb_image_url}` :

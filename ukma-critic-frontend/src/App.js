@@ -17,6 +17,7 @@ import HomePageManager from "./pages/managers/HomePageManager";
 import HomePageClient from "./pages/clients/HomePageClient";
 import HomePage from "./pages/HomePage";
 import FilmsPageManager from "./pages/managers/FilmsPageManager";
+import FilmInfoPageClient from "./pages/clients/FilmInfoPageClient";
 
 
 function App() {
@@ -120,6 +121,15 @@ function App() {
                         element={
                             <ProtectedRoute>
                                 <HomePageClient />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/user-page/films/info/:id"
+                        element={
+                            <ProtectedRoute>
+                                <FilmInfoPageClient />
                             </ProtectedRoute>
                         }
                     />
