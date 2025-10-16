@@ -75,9 +75,6 @@ export default function AddFilms() {
                 throw new Error(errorText || "Failed to create film");
             }
 
-            const createdFilm = await response.json();
-            console.log("Created film:", createdFilm);
-
             showMessage("Film added to database successfully", "success");
             setTimeout(() => {
                 const modal = new Modal(

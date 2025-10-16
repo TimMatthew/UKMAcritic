@@ -5,8 +5,6 @@ import "./Navbar.css"
 export default function Navbar() {
     const { role, logout } = useAuth();
 
-    console.log(role)
-
     return (
         <nav className="navbar navbar-expand-lg navbar-dark px-3" style={{backgroundColor:'#190b00', color: '#f1e7e0'}}>
             {role === null && (
@@ -36,7 +34,6 @@ export default function Navbar() {
                         </li>
                     )}
 
-                    {/*change url for users*/}
                     {role === "client" && (
                         <li className="nav-item">
                             <Link className="nav-link" to="/user-page/favourite-films">Favourite films</Link>

@@ -22,7 +22,6 @@ export default function HomePageClient() {
 
             const allGenres = response.data.flatMap((item) => item.genres);
             const uniqueGenres = [...new Set(allGenres)];
-            setGenres(uniqueGenres);
 
             console.log(uniqueGenres);
         } catch (err) {
