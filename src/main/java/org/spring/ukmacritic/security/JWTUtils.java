@@ -53,9 +53,9 @@ public class JWTUtils {
     public String extractRole(String token) {
         return extractToken(token).get("role", String.class);
     }
-    public boolean validateToken(String token, String userId) {
-        return userId.equals(extractUserId(token)) && !isTokenExpired(token);
-    }
+//    public boolean validateToken(String token, String userId) {
+//        return userId.equals(extractUserId(token)) && !isTokenExpired(token);
+//    }
 
     private boolean isTokenExpired(String token) {
         Date expiration = Jwts.parserBuilder()

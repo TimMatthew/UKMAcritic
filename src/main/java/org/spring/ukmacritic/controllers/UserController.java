@@ -23,7 +23,7 @@ public class UserController {
 
     @PostMapping("login")
     public ResponseEntity<?> authenticate(@RequestBody UserAuthDto dto){
-        //return us.authenticate(dto);
+
         var user = us.authenticate(dto);
         var token = jwt.generateToken(user);
 
@@ -39,6 +39,20 @@ public class UserController {
                 .ok()
                 .header("Set-Cookie", cookie.toString())
                 .body(Map.of("token", token));
+    }
+
+    @PostMapping("logout")
+    public ResponseEntity<?> logout() {
+        ResponseCookie cookie = ResponseCookie.from("jwt", "")
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .maxAge(0)
+                .build();
+
+        return ResponseEntity.ok()
+                .header("Set-Cookie", cookie.toString())
+                .body(Map.of("message", "Logged out"));
     }
 
     @GetMapping("profile")

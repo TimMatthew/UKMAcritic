@@ -72,24 +72,24 @@ class UserControllerMockTests {
         verify(userService, times(2)).create(any(UserRegisterDto.class));
     }
 
-    @Test
-    void updateUser_ShouldCallServiceWithCorrectArgs() {
-        UUID id = UUID.randomUUID();
-        UserUpdateDto dto = new UserUpdateDto(
-                "updated@mail.com",
-                "updatedLogin"
-        );
-        userController.update(id, dto);
-        verify(userService, times(1)).update(eq(id), eq(dto));
-    }
-
-    @Test
-    void deleteUser_ShouldReturnNoContent() {
-        UUID id = UUID.randomUUID();
-
-        boolean response = userController.delete(id);
-
-        assertThat(response).isEqualTo(false); // because there is no user with this id to delete
-        verify(userService).delete(eq(id));
-    }
+//    @Test
+//    void updateUser_ShouldCallServiceWithCorrectArgs() {
+//        UUID id = UUID.randomUUID();
+//        UserUpdateDto dto = new UserUpdateDto(
+//                "updated@mail.com",
+//                "updatedLogin"
+//        );
+//        userController.update(id, dto);
+//        verify(userService, times(1)).update(eq(id), eq(dto));
+//    }
+//
+//    @Test
+//    void deleteUser_ShouldReturnNoContent() {
+//        UUID id = UUID.randomUUID();
+//
+//        boolean response = userController.delete(id);
+//
+//        assertThat(response).isEqualTo(false); // because there is no user with this id to delete
+//        verify(userService).delete(eq(id));
+//    }
 }

@@ -1,6 +1,5 @@
 package org.spring.ukmacritic.services;
 
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.spring.ukmacritic.dto.title.TitleResponseDto;
 import org.spring.ukmacritic.dto.title.TitleUpsertDto;
@@ -26,17 +25,19 @@ public class TitleService {
         if(roleFromToken.equals("false"))
             throw new IllegalArgumentException("You are not allowed to perform this action!");
 
+        String tmdb = generateUniqueTmdbId();
+
         var titleEntity = Title.builder()
-                .directors(title.directors())
-                .genres(title.genres())
-                .actors(title.actors())
-                .regions(title.regions())
+                .tmdbId(tmdb)
                 .titleName(title.titleName())
                 .overview(title.overview())
+                .keywords(title.keywords())
+                .genres(title.genres())
+                .actors(title.actors())
+                .director(title.director())
                 .releaseYear(title.releaseYear())
                 .rating(title.rating())
-                .idTmdb(title.tmdb())
-                .imageUrl(title.tmdb_image_url())
+                .imageUrl(title.imageUrl())
                 .build();
 
         titleEntity = titleRepo.saveAndFlush(titleEntity);
@@ -64,15 +65,15 @@ public class TitleService {
 
         var title = titleRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Title with id " + id + " is not found"));
 
-        title.setDirectors(dto.directors());
-        title.setGenres(dto.genres());
-        title.setActors(dto.actors());
-        title.setRegions(dto.regions());
         title.setTitleName(dto.titleName());
         title.setOverview(dto.overview());
+        title.setKeywords(dto.keywords());
+        title.setGenres(dto.genres());
+        title.setActors(dto.actors());
+        title.setDirector(dto.director());
         title.setReleaseYear(dto.releaseYear());
-        title.setIdTmdb(dto.tmdb());
-        title.setImageUrl(dto.tmdb_image_url());
+        title.setRating(dto.rating());
+        title.setImageUrl(dto.imageUrl());
 
         titleRepo.saveAndFlush(title);
 
@@ -96,30 +97,41 @@ public class TitleService {
     // --------------------------- HELPERS ---------------------------
     private TitleUpsertDto titleEntityToUpsertDTO(Title t){
         return TitleUpsertDto.builder()
-                .directors(t.getDirectors())
-                .genres(t.getGenres())
-                .actors(t.getActors())
-                .regions(t.getRegions())
                 .titleName(t.getTitleName())
                 .overview(t.getOverview())
+                .keywords(t.getKeywords())
+                .genres(t.getGenres())
+                .actors(t.getActors())
+                .director(t.getDirector())
                 .releaseYear(t.getReleaseYear())
-                .tmdb(t.getIdTmdb())
-                .tmdb_image_url(t.getImageUrl())
+                .rating(t.getRating())
+                .imageUrl(t.getImageUrl())
                 .build();
     }
 
     private TitleResponseDto titleEntityToResponseDTO(Title t){
         return TitleResponseDto.builder()
                 .id(t.getTitleId())
-                .directors(t.getDirectors())
-                .genres(t.getGenres())
-                .actors(t.getActors())
-                .regions(t.getRegions())
                 .titleName(t.getTitleName())
                 .overview(t.getOverview())
+                .keywords(t.getKeywords())
+                .genres(t.getGenres())
+                .actors(t.getActors())
+                .director(t.getDirector())
                 .releaseYear(t.getReleaseYear())
-                .tmdb(t.getIdTmdb())
-                .tmdb_image_url(t.getImageUrl())
+                .rating(t.getRating())
+                .imageUrl(t.getImageUrl())
                 .build();
     }
+
+    private String generateUniqueTmdbId() {
+        String tmdbId;
+        do {
+            long randomNumber = (long) (Math.random() * 1_000_000L);
+            tmdbId = String.valueOf(randomNumber);
+        } while (titleRepo.existsByTmdbId(tmdbId));
+
+        return tmdbId;
+    }
+
 }
