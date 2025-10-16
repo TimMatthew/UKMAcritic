@@ -5,4 +5,5 @@ import axios from 'axios';
 export default axios.create({
     baseURL: process.env.REACT_APP_BACKEND_BASE_URL,
     timeout: 5000,
+    credentials: "include"
 });

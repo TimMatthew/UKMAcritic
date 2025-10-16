@@ -1,21 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import api from "../api/AxiosConfig";
+import TagInput from "./TagInput";
+import StarRating from "./StarRating";
 
 export default function UpdateFilm() {
     const { id } = useParams();
     const navigate = useNavigate();
 
-    const [film, setFilm] = useState({
-        title: "",
-        genre: "",
-        year: "",
-        rating: ""
-    });
+    const [film, setFilm] = useState({});
 
     const [message, setMessage] = useState("");
     const [messageType, setMessageType] = useState("success");
     const [loading, setLoading] = useState(true);
+    const [errors, setErrors] = useState({});
 
     useEffect(() => {
         loadFilm();
@@ -23,8 +21,20 @@ export default function UpdateFilm() {
 
     const loadFilm = async () => {
         try {
-            const response = await api.get(`/films/${id}`);
-            setFilm(response.data);
+            const response = await api.get(`/titles/${id}`);
+            const filmData = response.data;
+            setFilm({
+                title: filmData.titleName,
+                genres: filmData.genres,
+                year: filmData.releaseYear,
+                // rating: filmData.rating,
+                directors: filmData.directors,
+                actors: filmData.actors,
+                regions: filmData.regions,
+                tmdb_image_url: filmData.tmdb_image_url,
+                tmdb: filmData.tmdb,
+                overview: filmData.overview
+            });
             setLoading(false);
         } catch (err) {
             console.error(err);
@@ -39,14 +49,70 @@ export default function UpdateFilm() {
 
     const onSubmit = async (e) => {
         e.preventDefault();
+        if (!validate()) {
+            return;
+        }
         try {
-            await api.put(`/films/${id}`, film);
+            const token = localStorage.getItem("site");
+
+            const response = await fetch(
+                `${process.env.REACT_APP_BACKEND_BASE_URL}/titles/${id}`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    credentials: "include",
+                    body: JSON.stringify({
+                        titleName: film.title,
+                        genres: film.genres,
+                        releaseYear: film.year,
+                        // rating: film.rating,
+                        directors: film.directors,
+                        actors: film.actors,
+                        tmdb_image_url: film.tmdb_image_url,
+                        tmdb: film.tmdb,
+                        overview: film.overview,
+                        regions: film.regions
+                    }),
+                }
+            );
+            if (!response.ok) {
+                const errText = await response.text();
+                throw new Error(errText || "Failed to update film");
+            }
             showMessage("Film updated successfully", "success");
-            setTimeout(() => navigate("/films"), 1500);
+            setTimeout(() => navigate("/admin-page/films"), 1500);
         } catch (err) {
             console.error(err);
             showMessage("Failed to update film", "danger");
         }
+    };
+
+    const validate = () => {
+        const newErrors = {};
+
+        if (!film.title.trim()) {
+            newErrors.title = "Title is required";
+        }
+
+        if (!film.overview.trim()) {
+            newErrors.overview = "Overview is required";
+        }
+
+        if (!film.tmdb_image_url.trim()) {
+            newErrors.tmdb_image_url = "Poster path is required";
+        }
+
+        if (!film.tmdb.trim()) {
+            newErrors.tmdb = "TMDB id is required";
+        } else if (!/^[0-9]+$/.test(film.tmdb)) {
+            newErrors.tmdb = "TMDB id should include only numbers";
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
     };
 
     const showMessage = (text, type) => {
@@ -93,32 +159,82 @@ export default function UpdateFilm() {
 
                             <form onSubmit={onSubmit}>
                                 <div className="mb-3">
+                                    <label htmlFor="tmdb" className="form-label fw-semibold">
+                                        TMDB id
+                                    </label>
+                                    <input
+                                        type="text"
+                                        className={`form-control ${errors.tmdb ? "is-invalid" : ""}`}
+                                        id="tmdb"
+                                        name="tmdb"
+                                        value={film.tmdb}
+                                        onChange={onInputChange}
+                                        required
+                                    />
+                                    {errors.tmdb && <div className="invalid-feedback">{errors.tmdb}</div>}
+                                </div>
+
+                                <div className="mb-3">
+                                    <label htmlFor="tmdb_image_url" className="form-label fw-semibold">
+                                        TMDB poster url
+                                    </label>
+                                    <input
+                                        type="text"
+                                        className={`form-control ${errors.tmdb_image_url ? "is-invalid" : ""}`}
+                                        id="tmdb_image_url"
+                                        name="tmdb_image_url"
+                                        value={film.tmdb_image_url}
+                                        onChange={onInputChange}
+                                        required
+                                    />
+                                    {errors.tmdb_image_url && <div className="invalid-feedback">{errors.tmdb_image_url}</div>}
+                                </div>
+
+                                <div className="mb-3">
                                     <label htmlFor="title" className="form-label fw-semibold">
                                         Title
                                     </label>
                                     <input
                                         type="text"
-                                        className="form-control"
+                                        className={`form-control ${errors.title ? "is-invalid" : ""}`}
                                         id="title"
                                         name="title"
                                         value={film.title}
                                         onChange={onInputChange}
                                         required
                                     />
+                                    {errors.title && <div className="invalid-feedback">{errors.title}</div>}
                                 </div>
 
                                 <div className="mb-3">
-                                    <label htmlFor="genre" className="form-label fw-semibold">
-                                        Genre
-                                    </label>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        id="genre"
-                                        name="genre"
-                                        value={film.genre}
-                                        onChange={onInputChange}
-                                        required
+                                    <TagInput
+                                        label="Genres"
+                                        values={film.genres || []}
+                                        onChange={(genres) => setFilm({...film, genres})}
+                                    />
+                                </div>
+
+                                <div className="mb-3">
+                                    <TagInput
+                                        label="Actors"
+                                        values={film.actors || []}
+                                        onChange={(actors) => setFilm({...film, actors})}
+                                    />
+                                </div>
+
+                                <div className="mb-3">
+                                    <TagInput
+                                        label="Directors"
+                                        values={film.directors || []}
+                                        onChange={(directors) => setFilm({...film, directors})}
+                                    />
+                                </div>
+
+                                <div className="mb-3">
+                                    <TagInput
+                                        label="Regions"
+                                        values={film.regions || []}
+                                        onChange={(regions) => setFilm({...film, regions})}
                                     />
                                 </div>
 
@@ -137,23 +253,32 @@ export default function UpdateFilm() {
                                     />
                                 </div>
 
+                                {/*<div className="mb-3">*/}
+                                {/*    <label className="form-label fw-semibold">Rating</label>*/}
+                                {/*    <StarRating*/}
+                                {/*        rating={film.rating || 0}*/}
+                                {/*        onChange={(value) => setFilm({...film, rating: value})}*/}
+                                {/*        max={10}*/}
+                                {/*    />*/}
+                                {/*    <small className="text-muted">{film.rating?.toFixed(1)} / 10</small>*/}
+                                {/*</div>*/}
+
                                 <div className="mb-3">
-                                    <label htmlFor="rating" className="form-label fw-semibold">
-                                        Rating
+                                    <label htmlFor="overview" className="form-label fw-semibold">
+                                        Overview
                                     </label>
                                     <input
-                                        type="number"
-                                        className="form-control"
-                                        id="rating"
-                                        name="rating"
-                                        min="0"
-                                        max="10"
-                                        step="0.1"
-                                        value={film.rating}
+                                        type="text"
+                                        className={`form-control ${errors.overview ? "is-invalid" : ""}`}
+                                        id="overview"
+                                        name="overview"
+                                        value={film.overview}
                                         onChange={onInputChange}
                                         required
                                     />
+                                    {errors.overview && <div className="invalid-feedback">{errors.overview}</div>}
                                 </div>
+
 
                                 <div className="d-flex justify-content-between">
                                     <Link to="/films" className="btn btn-outline-secondary">
