@@ -22,8 +22,7 @@ export default function HomePageClient() {
 
             const allGenres = response.data.flatMap((item) => item.genres);
             const uniqueGenres = [...new Set(allGenres)];
-
-            console.log(uniqueGenres);
+            setGenres(uniqueGenres);
         } catch (err) {
             console.error("Failed to load films", err);
         }
