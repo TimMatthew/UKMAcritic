@@ -16,6 +16,8 @@ import RegisterPage from "./pages/RegisterPage";
 import {CookiesProvider} from "react-cookie";
 import HomePageManager from "./pages/managers/HomePageManager";
 import HomePageClient from "./pages/clients/HomePageClient";
+import HomePage from "./pages/HomePage";
+import FilmsPageManager from "./pages/managers/FilmsPageManager";
 
 
 function App() {
@@ -27,6 +29,15 @@ function App() {
                 <Routes>
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/register" element={<RegisterPage />} />
+
+                    <Route
+                        path="/"
+                        element={
+                            <ProtectedRoute>
+                                <HomePage />
+                            </ProtectedRoute>
+                        }
+                    />
 
                     {/* manager */}
 
@@ -65,13 +76,26 @@ function App() {
                     />
 
                     <Route
-                        path="/films"
+                        path="/admin-page/films"
                         element={
                             <ProtectedRoute>
-                                <FilmsPage />
+                                <FilmsPageManager />
                             </ProtectedRoute>
                         }
                     />
+                    <Route
+                        path="/admin-page/films/edit/:id"
+                        element={
+                            <ProtectedRoute>
+                                <UpdateFilm />
+                            </ProtectedRoute>
+                        }
+                    />
+
+
+
+
+
                     <Route
                         path="/films/add"
                         element={
@@ -88,14 +112,7 @@ function App() {
                             </ProtectedRoute>
                         }
                     />
-                    <Route
-                        path="/films/edit/:id"
-                        element={
-                            <ProtectedRoute>
-                                <UpdateFilm />
-                            </ProtectedRoute>
-                        }
-                    />
+
 
                     {/* client */}
 

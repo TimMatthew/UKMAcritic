@@ -6,6 +6,12 @@ export default function Navbar() {
 
     return (
         <nav className="navbar navbar-expand-lg navbar-dark px-3" style={{backgroundColor:'#190b00', color: '#f1e7e0'}}>
+            {role === "" && (
+                <Link className="navbar-brand fw-bold" to="/login">
+                    🎥 UkmaCritic
+                </Link>
+            )}
+
             {role === "manager" && (
                 <Link className="navbar-brand fw-bold" to="/admin-page">
                     🎥 UkmaCritic
@@ -21,13 +27,22 @@ export default function Navbar() {
             <div className="collapse navbar-collapse">
                 <ul className="navbar-nav me-auto mb-2 mb-lg-0">
 
-                    <li className="nav-item">
-                        <Link className="nav-link" to="/films">Films</Link>
-                    </li>
+                    {role === "manager" && (
+                        <li className="nav-item">
+                            <Link className="nav-link" to="/admin-page/films">Films</Link>
+                        </li>
+                    )}
+
+                    {/*change url for users*/}
+                    {role === "client" && (
+                        <li className="nav-item">
+                            <Link className="nav-link" to="/films">Films</Link>
+                        </li>
+                    )}
 
                     {role === "manager" && (
                         <>
-                            <li className="nav-item">
+                        <li className="nav-item">
                                 <Link className="nav-link" to="/users">Users</Link>
                             </li>
                             <li className="nav-item">
@@ -43,9 +58,17 @@ export default function Navbar() {
                     )}
                 </ul>
 
-                <button className="btn btn-outline-light" onClick={logout}>
-                    Log out
-                </button>
+                {role !== "" && (
+                    <button className="btn btn-outline-light" onClick={logout}>
+                        Log out
+                    </button>
+                )}
+
+                {role === "" && (
+                    <Link className="btn btn-outline-light" to='/login'>
+                        Log in
+                    </Link>
+                )}
             </div>
         </nav>
     );
