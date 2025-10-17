@@ -8,5 +8,5 @@ import java.util.UUID;
 
 @Repository
 public interface FavouriteRepo extends JpaRepository<FavouriteTitle, UUID> {
-
+    boolean existsByFavId(UUID id);
 }
