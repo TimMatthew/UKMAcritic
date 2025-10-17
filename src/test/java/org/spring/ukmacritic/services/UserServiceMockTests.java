@@ -142,7 +142,7 @@ class UserServiceMockTests {
         user.setName("OldName");
         user.setLogin("OldLogin");
 
-        UserUpdateDto dto = new UserUpdateDto("NewLogin", "NewName");
+        UserUpdateDto dto = new UserUpdateDto("NewLogin", "password", "NewName");
 
         when(jwt.extractUserId(jwtToken)).thenReturn(userId.toString());
         when(userRepo.findById(userId)).thenReturn(Optional.of(user));

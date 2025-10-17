@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Client.css";
 import {Link, useNavigate} from "react-router-dom";
@@ -7,14 +7,17 @@ import {Card, Spinner} from "react-bootstrap";
 import ReadMore from "../../films/ReadMore";
 import RecommendationsSection from "./RecommendationsSection";
 import {map} from "framer-motion/m";
+import {useAuth} from "../../context/AuthProvider";
 
 export default function HomePageClient() {
     const [films, setFilms] = useState([]);
+    const { logout } = useAuth();
     // const [genres, setGenres] = useState([]);
     // const [selectedGenre, setSelectedGenre] = useState(null);
     const [favorites, setFavorites] = useState([]);
     const [search, setSearch] = useState("");
     const [searchField, setSearchField] = useState("title");
+    const user = useMemo(() => JSON.parse(localStorage.getItem("user")), []);
 
     const [currentPage, setCurrentPage] = useState(1);
     const filmsPerPage = 12;
@@ -25,33 +28,42 @@ export default function HomePageClient() {
 
     useEffect(() => {
         loadFilms();
-        if (user?.userId) {
-            loadFavorites();
-        }
     }, []);
 
-    useEffect(() => {
-        setCurrentPage(1);
-    }, [search]);
-
+useEffect(() => {
     const loadFavorites = async () => {
+        if (!user?.userId) {
+            logout();
+            return;
+        }
+
         try {
             const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/favs/${user.userId}`, {
                 credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("site")}`,
+                },
             });
             if (response.ok) {
                 const data = await response.json();
-                setFavorites(data.map(item => item.titleId));
+                setFavorites(data.map(item => item.titleId || item));
             } else {
                 console.error("Error fetching favorites");
             }
         } catch (error) {
             console.error("Error fetching favourites:", error);
-        }
-        finally {
+        } finally {
             setLoading(false);
         }
-    }
+    };
+
+    loadFavorites();
+}, [user]);
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [search]);
 
     const loadFilms = async () => {
         try {
@@ -95,16 +107,25 @@ export default function HomePageClient() {
         const token = localStorage.getItem("site");
 
         if (favorites.includes(filmId)) {
-            setFavorites(favorites.filter(id => id !== filmId));
-            try {
-                await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/favs/${filmId}`, {
-                    method: "DELETE",
-                    credentials: "include",
-                });
-            } catch (err) {
-                console.error(err);
-                setFavorites(prev => [...prev, filmId]);
-            }
+
+            alert("You can delete this film from your favorites on favourite page");
+
+            // try {
+            //     const favRecord = favorites.find(favId => favId === filmId);
+            //     console.log(favRecord);
+            //
+            //     if (!favRecord) return;
+            //     const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/favs/${favRecord}`, {
+            //         method: "DELETE",
+            //         credentials: "include",
+            //     });
+            //     if (response.ok) {
+            //         setFavorites(prev => prev.filter(fav => fav !== filmId));
+            //     }
+            // } catch (err) {
+            //     console.error(err);
+            //     setFavorites(prev => [...prev, filmId]);
+            // }
         } else {
             setFavorites([...favorites, filmId]);
             try {
@@ -129,39 +150,10 @@ export default function HomePageClient() {
 
     const favouriteFilms = films.filter(film => favorites.includes(film.id));
 
-    const user = JSON.parse(localStorage.getItem("user"));
-    useEffect(() => {
-        const fetchFavorites = async () => {
-            try {
-                const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/favs/${user.userId}`, {
-                    credentials: "include",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${localStorage.getItem("site")}`,
-                    }
-                });
-                if (response.ok) {
-                    const data = await response.json();
-                    setFavorites(data);
-                } else {
-                    console.error("Error fetching favorites");
-                }
-            } catch (error) {
-                console.error("Error fetching favourites:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchFavorites();
-    }, [user.userId]);
-
     const indexOfLastFilm = currentPage * filmsPerPage;
     const indexOfFirstFilm = indexOfLastFilm - filmsPerPage;
     const currentFilms = filteredFilms.slice(indexOfFirstFilm, indexOfLastFilm);
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
-    console.log(favouriteFilms)
 
     return (
         <div className="container py-4">
@@ -228,13 +220,13 @@ export default function HomePageClient() {
                                 >
                                     <button
                                         className={`btn btn-sm position-absolute top-0 end-0 m-2 ${
-                                            favouriteFilms.includes(film.id) ? "btn-danger" : "btn-outline-danger"
+                                            favorites.includes(film.id) ? "btn-danger" : "btn-outline-danger"
                                         }`}
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             toggleFavorite(film.id);
                                         }}
-                                        title={favouriteFilms.includes(film.id) ? "Delete from favorites" : "Add to favourites"}
+                                        title={favorites.includes(film.id) ? "Delete from favorites" : "Add to favourites"}
                                     >
                                         ❤️
                                     </button>

@@ -21,8 +21,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class FavouritesServiceMockTests {
     @Mock
@@ -88,8 +87,13 @@ public class FavouritesServiceMockTests {
 
     @Test
     void testGetAll() {
-        User user = new User(); user.setUserId(userId);
-        Title title = new Title(); title.setTitleId(titleId);
+        UUID userId = UUID.fromString("a9aaa13b-a2e6-4cea-852a-0ee76689d09d");
+
+        User user = new User();
+        user.setUserId(userId);
+
+        Title title = new Title();
+        title.setTitleId(titleId);
 
         FavouriteTitle fav = FavouriteTitle.builder()
                 .favId(favId)
@@ -97,14 +101,16 @@ public class FavouritesServiceMockTests {
                 .title(title)
                 .build();
 
-        when(favouriteRepo.findAll()).thenReturn(List.of(fav));
+        when(userRepo.findById(userId)).thenReturn(Optional.of(user));
+        when(favouriteRepo.findAllByUser(user)).thenReturn(List.of(fav));
 
-        List<FavResponseDto> result = favService.getAll(user.getUserId());
-
+        List<FavResponseDto> result = favService.getAll(userId);
+        assertNotNull(result);
         assertEquals(1, result.size());
         assertEquals(favId, result.get(0).favId());
-        verify(favouriteRepo).findAll();
+        verify(favouriteRepo, times(1)).findAllByUser(user);
     }
+
 
     @Test
     void testDeleteSuccess() {

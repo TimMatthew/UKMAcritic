@@ -93,6 +93,31 @@ export default function FavouriteFilmsPage() {
                                 style={{ cursor: "pointer" }}
                                 onClick={() => navigate(`/user-page/films/info/${film.id}`)}
                             >
+                                <button
+                                    className="btn btn-sm position-absolute top-0 end-0 m-2 btn-danger"
+                                    title="Remove from favourites"
+                                    onClick={async (e) => {
+                                        e.stopPropagation();
+                                        try {
+                                            const favRecord = favorites.find(fav => fav.titleId === film.id);
+                                            if (!favRecord) return;
+
+                                            const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/favs/${favRecord.favId}`, {
+                                                method: "DELETE",
+                                                credentials: "include",
+                                            });
+                                            if (response.ok) {
+                                                setFavorites(prev => prev.filter(fav => fav.titleId !== film.id));
+                                            } else {
+                                                console.error("Failed to delete favourite");
+                                            }
+                                        } catch (err) {
+                                            console.error("Error deleting favourite:", err);
+                                        }
+                                    }}
+                                >
+                                    ❤️
+                                </button>
                                 <Card.Img
                                     variant="top"
                                     src={film.imageUrl ?
