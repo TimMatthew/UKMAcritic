@@ -102,10 +102,10 @@ export default function UsersPage() {
                                             <i className="bi bi-eye me-1"></i> View
                                         </Link>
 
-                                        <Link to={`/admin-page/users/update_user/${user.id}`}
-                                              className="btn btn-outline-secondary btn-sm mx-1">
-                                            <i className="bi bi-pencil me-1"></i> Update
-                                        </Link>
+                                        {/*<Link to={`/admin-page/users/update_user/${user.id}`}*/}
+                                        {/*      className="btn btn-outline-secondary btn-sm mx-1">*/}
+                                        {/*    <i className="bi bi-pencil me-1"></i> Update*/}
+                                        {/*</Link>*/}
 
                                         <button
                                             className="btn btn-outline-danger btn-sm mx-1"

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, Spinner } from "react-bootstrap";
 import api from "../../api/AxiosConfig";
+import ReadMore from "../../films/ReadMore";
 
 export default function FavouriteFilmsPage() {
     const [favorites, setFavorites] = useState([]);
@@ -35,7 +36,6 @@ export default function FavouriteFilmsPage() {
                 if (response.ok) {
                     const data = await response.json();
                     setFavorites(data);
-                    console.log(data);
                 } else {
                     console.error("Error fetching favorites");
                 }
@@ -73,8 +73,6 @@ export default function FavouriteFilmsPage() {
         );
     }
 
-    console.log(films);
-
     return (
         <div className="container py-5">
             <h2 className="text-center mb-4 fw-bold text-danger">❤️ Favourite Films</h2>
@@ -104,7 +102,17 @@ export default function FavouriteFilmsPage() {
                                     className="film-poster"
                                 />
                                 <Card.Body>
-                                    <Card.Title className="fw-semibold text-center">{film.titleName}</Card.Title>
+                                    <Card.Title className="text-truncate">{film.titleName}</Card.Title>
+                                    <Card.Text className="text-muted mb-1">
+                                        <ReadMore text={
+                                            `${film.releaseYear} • ${film.genres ?
+                                                film.genres.join(', ').replace(/([a-z])([A-Z])/g, "$1 $2") : '-'}`
+                                        } maxLength={50}/>
+
+                                    </Card.Text>
+                                    <Card.Text>
+                                        ⭐ <strong>{film.rating}</strong>
+                                    </Card.Text>
                                 </Card.Body>
                             </Card>
                         </div>

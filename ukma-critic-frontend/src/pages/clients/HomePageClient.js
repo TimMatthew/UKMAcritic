@@ -5,6 +5,8 @@ import {Link, useNavigate} from "react-router-dom";
 import api from "../../api/AxiosConfig";
 import {Card, Spinner} from "react-bootstrap";
 import ReadMore from "../../films/ReadMore";
+import RecommendationsSection from "./RecommendationsSection";
+import {map} from "framer-motion/m";
 
 export default function HomePageClient() {
     const [films, setFilms] = useState([]);
@@ -23,17 +25,38 @@ export default function HomePageClient() {
 
     useEffect(() => {
         loadFilms();
+        if (user?.userId) {
+            loadFavorites();
+        }
     }, []);
 
     useEffect(() => {
         setCurrentPage(1);
     }, [search]);
 
+    const loadFavorites = async () => {
+        try {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/favs/${user.userId}`, {
+                credentials: "include",
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setFavorites(data.map(item => item.titleId));
+            } else {
+                console.error("Error fetching favorites");
+            }
+        } catch (error) {
+            console.error("Error fetching favourites:", error);
+        }
+        finally {
+            setLoading(false);
+        }
+    }
+
     const loadFilms = async () => {
         try {
             const response = await api.get("/titles");
             setFilms(response.data);
-            setLoading(false);
 
             // const allGenres = response.data.flatMap((item) => item.genres);
             // const uniqueGenres = [...new Set(allGenres)];
@@ -71,15 +94,20 @@ export default function HomePageClient() {
     const toggleFavorite = async (filmId) => {
         const token = localStorage.getItem("site");
 
-        try {
-            if (favorites.includes(filmId)) {
-                setFavorites(favorites.filter((id) => id !== filmId));
+        if (favorites.includes(filmId)) {
+            setFavorites(favorites.filter(id => id !== filmId));
+            try {
                 await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/favs/${filmId}`, {
                     method: "DELETE",
                     credentials: "include",
                 });
-            } else {
-                setFavorites([...favorites, filmId]);
+            } catch (err) {
+                console.error(err);
+                setFavorites(prev => [...prev, filmId]);
+            }
+        } else {
+            setFavorites([...favorites, filmId]);
+            try {
                 await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/favs`, {
                     method: "POST",
                     credentials: "include",
@@ -92,44 +120,51 @@ export default function HomePageClient() {
                         userId: JSON.parse(localStorage.getItem("user")).userId,
                     }),
                 });
+            } catch (err) {
+                console.error(err);
+                setFavorites(prev => prev.filter(id => id !== filmId));
             }
-        } catch (err) {
-            console.error("Error while updating favourites", err);
         }
     };
+
+    const favouriteFilms = films.filter(film => favorites.includes(film.id));
+
+    const user = JSON.parse(localStorage.getItem("user"));
+    useEffect(() => {
+        const fetchFavorites = async () => {
+            try {
+                const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/favs/${user.userId}`, {
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem("site")}`,
+                    }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    setFavorites(data);
+                } else {
+                    console.error("Error fetching favorites");
+                }
+            } catch (error) {
+                console.error("Error fetching favourites:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchFavorites();
+    }, [user.userId]);
 
     const indexOfLastFilm = currentPage * filmsPerPage;
     const indexOfFirstFilm = indexOfLastFilm - filmsPerPage;
     const currentFilms = filteredFilms.slice(indexOfFirstFilm, indexOfLastFilm);
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+    console.log(favouriteFilms)
+
     return (
         <div className="container py-4">
-            <div className="search-wrapper mb-4 d-flex flex-column flex-md-row align-items-md-center gap-2">
-                <div className="position-relative flex-grow-1">
-                    <i className="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
-                    <input
-                        type="text"
-                        className="form-control ps-5"
-                        placeholder={`Search by ${searchField}...`}
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                    />
-                </div>
-
-                <select
-                    className="form-select"
-                    style={{ maxWidth: "180px" }}
-                    value={searchField}
-                    onChange={(e) => setSearchField(e.target.value)}
-                >
-                    <option value="title">Title</option>
-                    <option value="actors">Actors</option>
-                    <option value="genres">Genres</option>
-                    <option value="directors">Directors</option>
-                </select>
-            </div>
-
             {loading && (
                 <div className="text-center py-5">
                     <Spinner animation="border" />
@@ -151,13 +186,35 @@ export default function HomePageClient() {
 
             {!loading && (
                 <div>
-                    <h2 className="mt-5 mb-4">Based on the film you liked</h2>
-                    <div className="row">
-                        <div className="col-12">
-                            <div className="alert alert-secondary text-center">
-                                Not ready yet 😢
-                            </div>
+                    <RecommendationsSection
+                        key={favorites.length}
+                        favoriteFilms={films.filter(f => favorites.includes(f.id))}
+                        allFilms={films}
+                    />
+
+                    <div className="search-wrapper mb-4 d-flex flex-column flex-md-row align-items-md-center gap-2">
+                        <div className="position-relative flex-grow-1">
+                            <i className="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                            <input
+                                type="text"
+                                className="form-control ps-5"
+                                placeholder={`Search by ${searchField}...`}
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                            />
                         </div>
+
+                        <select
+                            className="form-select"
+                            style={{ maxWidth: "180px" }}
+                            value={searchField}
+                            onChange={(e) => setSearchField(e.target.value)}
+                        >
+                            <option value="title">Title</option>
+                            <option value="actors">Actors</option>
+                            <option value="genres">Genres</option>
+                            <option value="directors">Directors</option>
+                        </select>
                     </div>
 
                     <h2 className="mt-5 mb-4">Other people also like</h2>
@@ -171,13 +228,13 @@ export default function HomePageClient() {
                                 >
                                     <button
                                         className={`btn btn-sm position-absolute top-0 end-0 m-2 ${
-                                            favorites.includes(film.id) ? "btn-danger" : "btn-outline-danger"
+                                            favouriteFilms.includes(film.id) ? "btn-danger" : "btn-outline-danger"
                                         }`}
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             toggleFavorite(film.id);
                                         }}
-                                        title={favorites.includes(film.id) ? "Delete from favorites" : "Add to favourites"}
+                                        title={favouriteFilms.includes(film.id) ? "Delete from favorites" : "Add to favourites"}
                                     >
                                         ❤️
                                     </button>

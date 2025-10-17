@@ -99,7 +99,7 @@ public class FavouritesServiceMockTests {
 
         when(favouriteRepo.findAll()).thenReturn(List.of(fav));
 
-        List<FavResponseDto> result = favService.getAll();
+        List<FavResponseDto> result = favService.getAll(user.getUserId());
 
         assertEquals(1, result.size());
         assertEquals(favId, result.get(0).favId());
