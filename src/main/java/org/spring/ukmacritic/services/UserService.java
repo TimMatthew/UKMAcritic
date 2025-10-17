@@ -80,7 +80,7 @@ public class UserService {
         if(!userId.equals(authenticatedUserId))
             throw new IllegalArgumentException("User with the following email already exists");
 
-        user.setName(dto.name());
+        user.setName(dto.userName());
         user.setLogin(dto.login());
         user.setPassword(dto.password());
 

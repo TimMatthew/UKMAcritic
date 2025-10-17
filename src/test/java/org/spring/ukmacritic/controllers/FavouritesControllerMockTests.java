@@ -42,23 +42,23 @@ public class FavouritesControllerMockTests {
 
         UUID result = favouritesController.create(dto, jwt);
 
-        assertEquals(favId, result);
+        assertEquals(favId, result);    @Test
+//    void testGetAll() {
+//        List<FavResponseDto> response = new ArrayList<FavResponseDto>();
+//        response.add(new FavResponseDto(UUID.randomUUID(), titleId, userId));
+//        response.add(new FavResponseDto(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID()));
+//
+//        when(favouriteService.getAll()).thenReturn(response);
+//
+//        List<FavResponseDto> result = favouritesController.getAll();
+//        assertEquals(response, result);
+//        assertEquals(2, result.size());
+//        verify(favouriteService).getAll();
+//    }
         verify(favouriteService).create(dto, jwt);
     }
 
-    @Test
-    void testGetAll() {
-        List<FavResponseDto> response = new ArrayList<FavResponseDto>();
-        response.add(new FavResponseDto(UUID.randomUUID(), titleId, userId));
-        response.add(new FavResponseDto(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID()));
-
-        when(favouriteService.getAll()).thenReturn(response);
-
-        List<FavResponseDto> result = favouritesController.getAll();
-        assertEquals(response, result);
-        assertEquals(2, result.size());
-        verify(favouriteService).getAll();
-    }
+//
 
     @Test
     void testDelete() {

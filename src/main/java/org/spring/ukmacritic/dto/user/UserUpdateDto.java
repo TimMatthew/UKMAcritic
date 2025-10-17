@@ -6,7 +6,7 @@ import lombok.Builder;
 public record UserUpdateDto(
         String login,
         String password,
-        String name
+        String userName
 ) {
 
 
