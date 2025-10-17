@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Modal, Button, Spinner, Card } from "react-bootstrap";
 import api from "../../api/AxiosConfig";
 import {Link} from "react-router-dom";
+import ReadMore from "../../films/ReadMore";
 
 export default function FilmsPageManager() {
     const [films, setFilms] = useState([]);
@@ -92,8 +93,8 @@ export default function FilmsPageManager() {
                             >
                                 <Card.Img
                                     variant="top"
-                                    src={film.tmdb_image_url ?
-                                        `https://image.tmdb.org/t/p/w500${film.tmdb_image_url}` :
+                                    src={film.imageUrl ?
+                                        `https://image.tmdb.org/t/p/w500${film.imageUrl}` :
                                         '/images/placeholder.png'}
                                     alt={film.titleName}
                                     style={{ height: "350px", objectFit: "cover" }}
@@ -101,7 +102,11 @@ export default function FilmsPageManager() {
                                 <Card.Body>
                                     <Card.Title className="text-truncate">{film.titleName}</Card.Title>
                                     <Card.Text className="text-muted mb-1">
-                                        {film.releaseYear} • {film.genres.join(', ') | '-'}
+                                        <ReadMore text={
+                                            `${film.releaseYear} • ${film.genres ? 
+                                                film.genres.join(', ').replace(/([a-z])([A-Z])/g, "$1 $2") : '-'}`
+                                        } maxLength={50}/>
+
                                     </Card.Text>
                                     <Card.Text>
                                         ⭐ <strong>{film.rating}</strong>

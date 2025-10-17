@@ -7,8 +7,9 @@ export default function TagInput({ label, values, onChange, placeholder }) {
     const handleAdd = (e) => {
         e.preventDefault();
         const trimmed = input.trim();
-        if (trimmed && !values.includes(trimmed)) {
-            onChange([...values, trimmed]);
+        const spaceLess = trimmed.split(' ').join('');
+        if (spaceLess && !values.includes(spaceLess)) {
+            onChange([...values, spaceLess]);
         }
         setInput("");
     };
@@ -24,12 +25,12 @@ export default function TagInput({ label, values, onChange, placeholder }) {
             <div className="d-flex flex-wrap gap-2 mb-2">
                 {values.map((item, idx) => (
                     <span key={idx} className="badge bg-secondary d-flex align-items-center gap-1">
-            {item}
+            {item.replace(/([a-z])([A-Z])/g, "$1 $2")}
                         <button
                             type="button"
                             className="btn-close btn-close-white btn-sm"
                             style={{ fontSize: "0.6rem" }}
-                            aria-label="Видалити"
+                            aria-label="Delete"
                             onClick={() => handleRemove(item)}
                         ></button>
           </span>

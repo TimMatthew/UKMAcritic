@@ -27,12 +27,12 @@ export default function UpdateFilm() {
                 title: filmData.titleName,
                 genres: filmData.genres,
                 year: filmData.releaseYear,
-                // rating: filmData.rating,
-                directors: filmData.directors,
+                rating: filmData.rating,
+                director: filmData.director,
                 actors: filmData.actors,
                 regions: filmData.regions,
-                tmdb_image_url: filmData.tmdb_image_url,
-                tmdb: filmData.tmdb,
+                tmdb_image_url: filmData.imageUrl,
+                // tmdb: filmData.tmdb,
                 overview: filmData.overview
             });
             setLoading(false);
@@ -55,6 +55,8 @@ export default function UpdateFilm() {
         try {
             const token = localStorage.getItem("site");
 
+            console.log(film.director)
+
             const response = await fetch(
                 `${process.env.REACT_APP_BACKEND_BASE_URL}/titles/${id}`,
                 {
@@ -68,11 +70,11 @@ export default function UpdateFilm() {
                         titleName: film.title,
                         genres: film.genres,
                         releaseYear: film.year,
-                        // rating: film.rating,
-                        directors: film.directors,
+                        rating: film.rating,
+                        director: film.director,
                         actors: film.actors,
-                        tmdb_image_url: film.tmdb_image_url,
-                        tmdb: film.tmdb,
+                        imageUrl: film.tmdb_image_url,
+                        // tmdb: film.tmdb,
                         overview: film.overview,
                         regions: film.regions
                     }),
@@ -105,11 +107,11 @@ export default function UpdateFilm() {
             newErrors.tmdb_image_url = "Poster path is required";
         }
 
-        if (!film.tmdb.trim()) {
-            newErrors.tmdb = "TMDB id is required";
-        } else if (!/^[0-9]+$/.test(film.tmdb)) {
-            newErrors.tmdb = "TMDB id should include only numbers";
-        }
+        // if (!film.tmdb.trim()) {
+        //     newErrors.tmdb = "TMDB id is required";
+        // } else if (!/^[0-9]+$/.test(film.tmdb)) {
+        //     newErrors.tmdb = "TMDB id should include only numbers";
+        // }
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -158,21 +160,21 @@ export default function UpdateFilm() {
                             )}
 
                             <form onSubmit={onSubmit}>
-                                <div className="mb-3">
-                                    <label htmlFor="tmdb" className="form-label fw-semibold">
-                                        TMDB id
-                                    </label>
-                                    <input
-                                        type="text"
-                                        className={`form-control ${errors.tmdb ? "is-invalid" : ""}`}
-                                        id="tmdb"
-                                        name="tmdb"
-                                        value={film.tmdb}
-                                        onChange={onInputChange}
-                                        required
-                                    />
-                                    {errors.tmdb && <div className="invalid-feedback">{errors.tmdb}</div>}
-                                </div>
+                                {/*<div className="mb-3">*/}
+                                {/*    <label htmlFor="tmdb" className="form-label fw-semibold">*/}
+                                {/*        TMDB id*/}
+                                {/*    </label>*/}
+                                {/*    <input*/}
+                                {/*        type="text"*/}
+                                {/*        className={`form-control ${errors.tmdb ? "is-invalid" : ""}`}*/}
+                                {/*        id="tmdb"*/}
+                                {/*        name="tmdb"*/}
+                                {/*        value={film.tmdb}*/}
+                                {/*        onChange={onInputChange}*/}
+                                {/*        required*/}
+                                {/*    />*/}
+                                {/*    {errors.tmdb && <div className="invalid-feedback">{errors.tmdb}</div>}*/}
+                                {/*</div>*/}
 
                                 <div className="mb-3">
                                     <label htmlFor="tmdb_image_url" className="form-label fw-semibold">
@@ -225,8 +227,8 @@ export default function UpdateFilm() {
                                 <div className="mb-3">
                                     <TagInput
                                         label="Directors"
-                                        values={film.directors || []}
-                                        onChange={(directors) => setFilm({...film, directors})}
+                                        values={film.director || []}
+                                        onChange={(director) => setFilm({...film, director})}
                                     />
                                 </div>
 
@@ -253,22 +255,22 @@ export default function UpdateFilm() {
                                     />
                                 </div>
 
-                                {/*<div className="mb-3">*/}
-                                {/*    <label className="form-label fw-semibold">Rating</label>*/}
-                                {/*    <StarRating*/}
-                                {/*        rating={film.rating || 0}*/}
-                                {/*        onChange={(value) => setFilm({...film, rating: value})}*/}
-                                {/*        max={10}*/}
-                                {/*    />*/}
-                                {/*    <small className="text-muted">{film.rating?.toFixed(1)} / 10</small>*/}
-                                {/*</div>*/}
+                                <div className="mb-3">
+                                    <label className="form-label fw-semibold">Rating</label>
+                                    <StarRating
+                                        rating={film.rating || 0}
+                                        onChange={(value) => setFilm({...film, rating: value})}
+                                        max={10}
+                                    />
+                                    <small className="text-muted">{film.rating?.toFixed(1)} / 10</small>
+                                </div>
 
                                 <div className="mb-3">
                                     <label htmlFor="overview" className="form-label fw-semibold">
                                         Overview
                                     </label>
-                                    <input
-                                        type="text"
+                                    <textarea
+                                        // type="comment"
                                         className={`form-control ${errors.overview ? "is-invalid" : ""}`}
                                         id="overview"
                                         name="overview"
