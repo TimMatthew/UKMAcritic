@@ -110,8 +110,8 @@ export default function FilmInfoPageClient() {
             <div className="row align-items-start">
                 <div className="col-md-4 mb-4 mb-md-0 text-center">
                     <img
-                        src={film.tmdb_image_url ?
-                            `https://image.tmdb.org/t/p/w500${film.tmdb_image_url}` :
+                        src={film.imageUrl ?
+                            `https://image.tmdb.org/t/p/w500${film.imageUrl}` :
                             '/images/placeholder.png'}
                         alt={film.titleName}
                         className="img-fluid rounded shadow-lg"
@@ -136,23 +136,23 @@ export default function FilmInfoPageClient() {
                     <div className="mb-2">
                         <strong>Genres:</strong>{" "}
                         {film.genres ? film.genres.map((genre, idx) => (
-                            <span key={idx} className="badge bg-secondary me-1">{genre}</span>
+                            <span key={idx} className="badge bg-secondary me-1">{genre.replace(/([a-z])([A-Z])/g, "$1 $2")}</span>
                         )) : "-"}
                     </div>
 
                     <div className="mb-2">
                         <strong>Directors:</strong>{" "}
-                        {film.directors ? film.directors.join(", ") : '-'}
+                        {film.director ? film.director.join(", ").replace(/([a-z])([A-Z])/g, "$1 $2") : '-'}
                     </div>
 
                     <div className="mb-2">
-                        <strong>Актори:</strong>{" "}
-                        {film.actors ? film.actors.join(", ") : '-'}
+                        <strong>Actors:</strong>{" "}
+                        {film.actors ? film.actors.join(", ").replace(/([a-z])([A-Z])/g, "$1 $2") : '-'}
                     </div>
 
                     <div className="mb-2">
                         <strong>Regions:</strong>{" "}
-                        {film.regions ? film.regions.join(", ") : ''}
+                        {film.regions ? film.regions.join(", ").replace(/([a-z])([A-Z])/g, "$1 $2") : '-'}
                     </div>
                 </div>
             </div>

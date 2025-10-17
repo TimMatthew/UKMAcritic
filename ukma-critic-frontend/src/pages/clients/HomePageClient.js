@@ -168,28 +168,6 @@ export default function HomePageClient() {
                                 </Card.Text>
                             </Card.Body>
                         </Card>
-
-                        {/*<div className="card h-100 shadow-sm position-relative">*/}
-                        {/*    */}
-
-                        {/*    <Link to={`/user-page/films/info/${film.id}`} className="text-decoration-none text-dark">*/}
-                        {/*        <img*/}
-                        {/*            src={film.tmdb_image_url ?*/}
-                        {/*                `https://image.tmdb.org/t/p/w500${film.tmdb_image_url}` :*/}
-                        {/*        'images/placeholder.png'}*/}
-                        {/*            className="card-img-top"*/}
-                        {/*            alt={film.titleName}*/}
-                        {/*        />*/}
-                        {/*        <div className="card-body">*/}
-                        {/*            <h5 className="card-title">{film.titleName}</h5>*/}
-                        {/*            <p className="card-text text-truncate">{film.overview}</p>*/}
-                        {/*            <div className="d-flex justify-content-between align-items-center">*/}
-                        {/*                <small className="text-muted">{film.releaseYear}</small>*/}
-                        {/*                <small className="text-warning">⭐ {film.rating}</small>*/}
-                        {/*            </div>*/}
-                        {/*        </div>*/}
-                        {/*    </Link>*/}
-                        {/*</div>*/}
                     </div>
                 ))}
 
