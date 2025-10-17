@@ -68,7 +68,9 @@ public class UserService {
 
     public UserResponseDto update(UUID id, UserUpdateDto dto, String token){
 
-        String roleFromToken = jwt.extractRole(token);
+        if(token == null)
+            throw new SecurityException("You must be authenticated (please log in into your account)!");
+
         String authenticatedUserId = jwt.extractUserId(token);
 
 
@@ -80,13 +82,10 @@ public class UserService {
 
         user.setName(dto.name());
         user.setLogin(dto.login());
+        user.setPassword(dto.password());
 
         userRepo.saveAndFlush(user);
         return userEntityToResponseDTO(user);
-    }
-
-    public UserUpdateDto changePassword(UUID id, String pwd){
-        return null;
     }
 
     public boolean delete(UUID id, String token){
