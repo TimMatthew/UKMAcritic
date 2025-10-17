@@ -23,9 +23,9 @@ public class FavouritesController {
         return fs.create(f, token);
     }
 
-    @GetMapping
-    public List<FavResponseDto> getAll(){
-        return fs.getAll();
+    @GetMapping("{id}")
+    public List<FavResponseDto> getAll(@PathVariable UUID id){
+        return fs.getAll(id);
     }
 
     @DeleteMapping("{id}")

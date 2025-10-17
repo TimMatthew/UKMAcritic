@@ -21,8 +21,6 @@ public class JWTUtils {
     public String generateToken(UserResponseDto user) {
         return Jwts.builder()
                 .setSubject(String.valueOf(user.userId()))
-//                .claim("login", user.login())
-//                .claim("name", user.userName())
                 .claim("role", String.valueOf(user.state()))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1 hour
@@ -42,29 +40,7 @@ public class JWTUtils {
         return extractToken(token).getSubject();
     }
 
-//    public String extractLogin(String token) {
-//        return extractToken(token).get("login", String.class);
-//    }
-
-//    public String extractName(String token) {
-//        return extractToken(token).get("name", String.class);
-//    }
-
     public String extractRole(String token) {
         return extractToken(token).get("role", String.class);
     }
-//    public boolean validateToken(String token, String userId) {
-//        return userId.equals(extractUserId(token)) && !isTokenExpired(token);
-//    }
-
-    private boolean isTokenExpired(String token) {
-        Date expiration = Jwts.parserBuilder()
-                .setSigningKey(SECRET)
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .getExpiration();
-        return expiration.before(new Date());
-    }
-
 }

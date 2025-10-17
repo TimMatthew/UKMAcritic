@@ -44,8 +44,12 @@ public class FavouriteService {
         return favouriteEntity.getFavId();
     }
 
-    public List<FavResponseDto> getAll(){
-        return fr.findAll().stream()
+    public List<FavResponseDto> getAll(UUID id){
+        var user = ur.findById(id).orElseThrow(() -> new SecurityException("User with "+id+" id is not found!"));
+
+        List<FavouriteTitle> favList = fr.findAllByUser(user);
+
+        return favList.stream()
                 .map(this::favEntityToDto)
                 .toList();
     }
