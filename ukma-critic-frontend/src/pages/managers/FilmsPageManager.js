@@ -122,12 +122,12 @@ export default function FilmsPageManager() {
                                     </button>
                                 </li>
 
-                                {Array.from({ length: Math.ceil(films.length / filmsPerPage) })
+                                {Array.from({ length: Math.ceil(filteredFilms.length / filmsPerPage) })
                                     .map((_, index) => index + 1)
                                     .filter(
                                         (page) =>
                                             page === 1 ||
-                                            page === Math.ceil(films.length / filmsPerPage) ||
+                                            page === Math.ceil(filteredFilms.length / filmsPerPage) ||
                                             (page >= currentPage - 2 && page <= currentPage + 2)
                                     )
                                     .map((page, i, arr) => {
@@ -193,8 +193,8 @@ export default function FilmsPageManager() {
                             <div className="row">
                                 <div className="col-md-5">
                                     <img
-                                        src={selectedFilm.tmdb_image_url ?
-                                            `https://image.tmdb.org/t/p/w500${selectedFilm.tmdb_image_url}` :
+                                        src={selectedFilm.imageUrl ?
+                                            `https://image.tmdb.org/t/p/w500${selectedFilm.imageUrl}` :
                                             '/images/placeholder.png'}
                                         alt={selectedFilm.titleName}
                                         className="img-fluid rounded shadow-sm"
@@ -203,9 +203,12 @@ export default function FilmsPageManager() {
                                 <div className="col-md-7">
                                     <h5 className="mt-3 mt-md-0">Information</h5>
                                     <p><strong>Year:</strong> {selectedFilm.releaseYear}</p>
-                                    <p><strong>Genres:</strong> {selectedFilm.genres ? selectedFilm.genres.join(', ') : '-'}</p>
-                                    <p><strong>Actors:</strong> {selectedFilm.actors ? selectedFilm.actors.join(', ') : '-'}</p>
-                                    <p><strong>Directors:</strong> {selectedFilm.directors ? selectedFilm.directors.join(', ') : '-'}</p>
+                                    <p><strong>Genres:</strong> {selectedFilm.genres ?
+                                        selectedFilm.genres.join(', ').replace(/([a-z])([A-Z])/g, "$1 $2") : '-'}</p>
+                                    <p><strong>Actors:</strong> {selectedFilm.actors ?
+                                        selectedFilm.actors.join(', ').replace(/([a-z])([A-Z])/g, "$1 $2") : '-'}</p>
+                                    <p><strong>Directors:</strong> {selectedFilm.director ?
+                                        selectedFilm.director.join(', ').replace(/([a-z])([A-Z])/g, "$1 $2") : '-'}</p>
                                     <p><strong>Rating:</strong> ⭐ {selectedFilm.rating}</p>
                                     <p>{selectedFilm.overview}</p>
                                 </div>
