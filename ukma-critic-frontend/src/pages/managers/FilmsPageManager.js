@@ -13,9 +13,15 @@ export default function FilmsPageManager() {
     const [currentPage, setCurrentPage] = useState(1);
     const filmsPerPage = 12;
 
+    const [search, setSearch] = useState("");
+
     useEffect(() => {
         loadFilms();
     }, []);
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [search]);
 
     const loadFilms = async () => {
         try {
@@ -28,9 +34,16 @@ export default function FilmsPageManager() {
         }
     };
 
+    const filteredFilms = films.filter((film) => {
+        const matchesTitle = film.titleName
+            .toLowerCase()
+            .includes(search.toLowerCase());
+        return matchesTitle;
+    });
+
     const indexOfLastFilm = currentPage * filmsPerPage;
     const indexOfFirstFilm = indexOfLastFilm - filmsPerPage;
-    const currentFilms = films.slice(indexOfFirstFilm, indexOfLastFilm);
+    const currentFilms = filteredFilms.slice(indexOfFirstFilm, indexOfLastFilm);
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
     const handleOpenFilm = (film) => setSelectedFilm(film);
@@ -39,6 +52,18 @@ export default function FilmsPageManager() {
     return (
         <div className="container py-5">
             <h2 className="mb-4 text-center">Films management page</h2>
+
+            <div className="search-wrapper mb-4">
+                <i className="bi bi-search search-icon"></i>
+                <input
+                    type="text"
+                    className="search-input"
+                    placeholder="Search films..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                />
+            </div>
+
             <div style={{display: 'flex', margin: '20px', justifyContent: 'center'}}>
                 <Link type="button" to={`/admin-page/films/add`}
                       className="btn btn-primary"
