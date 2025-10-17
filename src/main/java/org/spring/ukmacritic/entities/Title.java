@@ -32,7 +32,7 @@ public class Title {
     private String overview;
 
     @JdbcTypeCode(SqlTypes.ARRAY)
-    @Column(name = "keywords")
+    @Column(name = "keywords", columnDefinition = "text[]")
     private List<String> keywords;
 
     @JdbcTypeCode(SqlTypes.ARRAY)
@@ -40,17 +40,17 @@ public class Title {
     private List<String> genres;
 
     @JdbcTypeCode(SqlTypes.ARRAY)
-    @Column(name = "cast_t", columnDefinition = "text[]")
+    @Column(name = "actors", columnDefinition = "text[]")
     private List<String> actors;
 
     @JdbcTypeCode(SqlTypes.ARRAY)
-    @Column(name = "crew")
+    @Column(name = "director")
     private List<String> director;
 
     @Column(name = "release_year")
     private short releaseYear;
 
-    @Column(name = "vote_average")
+    @Column(name = "rating")
     private byte rating;
 
     @Column(name = "tmdb_image_url")
