@@ -10,6 +10,9 @@ export default function FilmsPageManager() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const [currentPage, setCurrentPage] = useState(1);
+    const filmsPerPage = 12;
+
     useEffect(() => {
         loadFilms();
     }, []);
@@ -18,11 +21,17 @@ export default function FilmsPageManager() {
         try {
             const response = await api.get("/titles");
             setFilms(response.data);
+            console.log(response.data)
             setLoading(false);
         } catch (err) {
             console.error(err);
         }
     };
+
+    const indexOfLastFilm = currentPage * filmsPerPage;
+    const indexOfFirstFilm = indexOfLastFilm - filmsPerPage;
+    const currentFilms = films.slice(indexOfFirstFilm, indexOfLastFilm);
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
     const handleOpenFilm = (film) => setSelectedFilm(film);
     const handleClose = () => setSelectedFilm(null);
@@ -49,7 +58,7 @@ export default function FilmsPageManager() {
 
             {!loading && !error && (
                 <div className="row">
-                    {films.map((film) => (
+                    {currentFilms.map((film) => (
                         <div key={film.id} className="col-12 col-sm-6 col-md-4 col-lg-2 mb-4">
                             <Card
                                 className="h-100 shadow-sm film-card"
@@ -76,7 +85,77 @@ export default function FilmsPageManager() {
                             </Card>
                         </div>
                     ))}
+                    <div className="d-flex justify-content-center mt-4">
+                        <nav>
+                            <ul className="pagination">
+                                <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
+                                    <button
+                                        className="page-link"
+                                        onClick={() => paginate(currentPage - 1)}
+                                    >
+                                        &laquo;
+                                    </button>
+                                </li>
+
+                                {Array.from({ length: Math.ceil(films.length / filmsPerPage) })
+                                    .map((_, index) => index + 1)
+                                    .filter(
+                                        (page) =>
+                                            page === 1 ||
+                                            page === Math.ceil(films.length / filmsPerPage) ||
+                                            (page >= currentPage - 2 && page <= currentPage + 2)
+                                    )
+                                    .map((page, i, arr) => {
+                                        const prevPage = arr[i - 1];
+                                        if (prevPage && page - prevPage > 1) {
+                                            return (
+                                                <React.Fragment key={page}>
+                                                    <li className="page-item disabled">
+                                                        <span className="page-link">...</span>
+                                                    </li>
+                                                    <li
+                                                        className={`page-item ${currentPage === page ? "active" : ""}`}
+                                                    >
+                                                        <button onClick={() => paginate(page)} className="page-link">
+                                                            {page}
+                                                        </button>
+                                                    </li>
+                                                </React.Fragment>
+                                            );
+                                        }
+
+                                        return (
+                                            <li
+                                                key={page}
+                                                className={`page-item ${currentPage === page ? "active" : ""}`}
+                                            >
+                                                <button onClick={() => paginate(page)} className="page-link">
+                                                    {page}
+                                                </button>
+                                            </li>
+                                        );
+                                    })}
+
+                                <li
+                                    className={`page-item ${
+                                        currentPage === Math.ceil(films.length / filmsPerPage)
+                                            ? "disabled"
+                                            : ""
+                                    }`}
+                                >
+                                    <button
+                                        className="page-link"
+                                        onClick={() => paginate(currentPage + 1)}
+                                    >
+                                        &raquo;
+                                    </button>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
                 </div>
+
+
             )}
 
             <Modal show={!!selectedFilm} onHide={handleClose} centered size="lg">
