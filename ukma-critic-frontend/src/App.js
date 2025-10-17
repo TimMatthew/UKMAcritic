@@ -15,7 +15,6 @@ import RegisterPage from "./pages/RegisterPage";
 import {CookiesProvider} from "react-cookie";
 import HomePageManager from "./pages/managers/HomePageManager";
 import HomePageClient from "./pages/clients/HomePageClient";
-import HomePage from "./pages/HomePage";
 import FilmsPageManager from "./pages/managers/FilmsPageManager";
 import FilmInfoPageClient from "./pages/clients/FilmInfoPageClient";
 import ModerateUsersCommentsPage from "./pages/managers/ModerateUsersCommentsPage";

@@ -28,6 +28,14 @@ export default function LoginPage() {
         return null;
     };
 
+    const showError = (message, duration = 5000) => {
+        setError(message);
+
+        setTimeout(() => {
+            setError("");
+        }, duration);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError(null);
@@ -39,7 +47,7 @@ export default function LoginPage() {
 
         setLoading(true);
         try {
-            auth.login(input);
+            await auth.login(input, showError);
         } catch (err) {
             console.error(err);
             setError("Authorization failed. Please try again later.");

@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
     const [role, setRole] = useState(localStorage.getItem("role") || "");
     const [user, setUser] = useState(localStorage.getItem("user") || "");
 
-    const loginAction = async (data) => {
+    const loginAction = async (data, onError) => {
         try {
 
             const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/users/login`, {
@@ -33,14 +33,13 @@ export const AuthProvider = ({ children }) => {
                 localStorage.setItem("role", userData.state ? 'manager' : 'client');
                 setRole(userData.state ? 'manager' : 'client');
                 localStorage.setItem("user", JSON.stringify(userData));
-
-
                 navigate(userData.state ? "/admin-page" : "/user-page");
                 return;
             }
-            throw new Error(res.message);
+            throw new Error(res.message || "Authorization failed");
         } catch (err) {
-            console.error(err);
+            // console.error(err);
+            if (onError) onError(err.message || "Authorization failed. Please try again later.");
         }
     };
 
