@@ -1,0 +1,30 @@
+:root {
+    --yellowish-white: #f1f6e2;
+    --lilac: #d0d0f4;
+    --green: #92a377;
+    --orange : #fe9542;
+    --orange-black: #190b00;
+    --orange-white: #f1e7e0;
+}
+
+.card-hover {
+    transition: all 0.3s ease-in-out;
+}
+
+.card-hover:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(25, 11, 0, 100);
+    border-color: var(--orange) !important;
+}
+
+.btn-card {
+    color: var(--orange-black);
+    background-color: var(--orange);
+    border-color: var(--orange-black);
+}
+
+.btn-card:hover {
+    color: var(--orange);
+    background-color: var(--orange-black);
+    border-color: var(--orange);
+}

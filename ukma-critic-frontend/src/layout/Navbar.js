@@ -1,58 +1,75 @@
-import React from "react";
+import { useAuth } from "../context/AuthProvider";
+import { Link } from "react-router-dom";
+import "./Navbar.css"
 
-// !to_change when styling
-// style={{color: '#442d1c'}}
-// style={{backgroundColor: '#e8d1a7'}}
+export default function Navbar() {
+    const { role, logout } = useAuth();
 
-
-// !to_change
-// LINKS and buttons
-export default function Navbar () {
     return (
-        <div style={{color: '#442d1c'}}>
-            <nav className="navbar navbar-expand-lg bg-body-tertiary">
-                <div className="container-fluid">
-                    <a className="navbar-brand" href="#">UkmaCritic</a>
-                    <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                        <span className="navbar-toggler-icon"></span>
+        <nav className="navbar navbar-expand-lg navbar-dark px-3" style={{backgroundColor:'#190b00', color: '#f1e7e0'}}>
+            {role === null && (
+                <Link className="navbar-brand fw-bold" to="/login">
+                    🎥 UkmaCritic
+                </Link>
+            )}
+
+            {role === "manager" && (
+                <Link className="navbar-brand fw-bold" to="/admin-page">
+                    🎥 UkmaCritic
+                </Link>
+            )}
+            {role === "client" && (
+                <Link className="navbar-brand fw-bold" to="/user-page">
+                    🎥 UkmaCritic
+                </Link>
+            )}
+
+
+            <div className="collapse navbar-collapse">
+                <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+
+                    {role === "manager" && (
+                        <li className="nav-item">
+                            <Link className="nav-link" to="/admin-page/films">Films</Link>
+                        </li>
+                    )}
+
+                    {role === "client" && (
+                        <li className="nav-item">
+                            <Link className="nav-link" to="/user-page/favourite-films">Favourite films</Link>
+                        </li>
+                    )}
+
+                    {role === "manager" && (
+                        <>
+                        <li className="nav-item">
+                                <Link className="nav-link" to="/admin-page/users">Users</Link>
+                            </li>
+                            <li className="nav-item">
+                                <Link className="nav-link" to="/admin-page/comments">Reviews</Link>
+                            </li>
+                        </>
+                    )}
+
+                    {role === "client" && (
+                        <li className="nav-item">
+                            <Link className="nav-link" to="/user-page/profile">My profile</Link>
+                        </li>
+                    )}
+                </ul>
+
+                {role !== null && (
+                    <button className="btn btn-outline-light" onClick={logout}>
+                        Log out
                     </button>
-                    <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                            {/* here users link. MUST be only visible to managers */}
-                            <li className="nav-item">
-                                <a className="nav-link active" aria-current="page" href="/users">Users page</a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link" href="#">Link</a>
-                            </li>
-                            <li className="nav-item dropdown">
-                                <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                                   aria-expanded="false">
-                                    Dropdown
-                                </a>
-                                <ul className="dropdown-menu">
-                                    <li><a className="dropdown-item" href="#">Action</a></li>
-                                    <li><a className="dropdown-item" href="#">Another action</a></li>
-                                    <li>
-                                        <hr className="dropdown-divider"/>
-                                    </li>
-                                    <li><a className="dropdown-item" href="#">Something else here</a></li>
-                                </ul>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link disabled" aria-disabled="true">Disabled</a>
-                            </li>
-                        </ul>
-                        <form className="d-flex" role="search">
-                            <input className="form-control me-2" type="search" placeholder="Search"
-                                   aria-label="Search"/>
-                            <button className="btn btn-outline-success" type="submit">Search</button>
-                        </form>
-                    </div>
-                </div>
-            </nav>
-        </div>
-    )
+                )}
+
+                {role === null && (
+                    <Link className="btn btn-outline-light" to='/login'>
+                        Log in
+                    </Link>
+                )}
+            </div>
+        </nav>
+    );
 }
