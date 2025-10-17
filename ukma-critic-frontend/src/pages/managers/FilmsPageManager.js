@@ -17,6 +17,11 @@ export default function FilmsPageManager() {
     const [search, setSearch] = useState("");
     const [searchField, setSearchField] = useState("title");
 
+    const [showConfirm, setShowConfirm] = useState(false);
+    const [filmToDelete, setFilmToDelete] = useState(null);
+
+    const [updatingPosters, setUpdatingPosters] = useState(false);
+
     useEffect(() => {
         loadFilms();
     }, []);
@@ -36,7 +41,7 @@ export default function FilmsPageManager() {
     };
 
     const filteredFilms = films.filter((film) => {
-        const query = search.toLowerCase().split(' ').join('');
+        const query = search.toLowerCase();
 
         if (!search.trim()) return true;
 
@@ -45,15 +50,15 @@ export default function FilmsPageManager() {
                 return film.titleName?.toLowerCase().includes(query);
             case "actors":
                 return film.actors?.some((actor) =>
-                    actor.toLowerCase().includes(query)
+                    actor.toLowerCase().includes(query.split(' ').join(''))
                 );
             case "genres":
                 return film.genres?.some((genre) =>
-                    genre.toLowerCase().includes(query)
+                    genre.toLowerCase().includes(query.split(' ').join(''))
                 );
             case "directors":
                 return film.director?.some((dir) =>
-                    dir.toLowerCase().includes(query)
+                    dir.toLowerCase().includes(query.split(' ').join(''))
                 );
             default:
                 return false;
@@ -68,9 +73,129 @@ export default function FilmsPageManager() {
     const handleOpenFilm = (film) => setSelectedFilm(film);
     const handleClose = () => setSelectedFilm(null);
 
+
+    // const limiter = new Bottleneck({
+    //   maxConcurrent: 3,
+    //   minTime: 300
+    // });
+    //
+    // async function fetchPosterForFilm(film) {
+    //     const title = film.titleName;
+    //     const year = film.releaseYear;
+    //     const options = {
+    //         method: 'GET',
+    //         url: 'https://api.themoviedb.org/3/search/movie',
+    //         params: {
+    //             query: title,
+    //             include_adult: 'false',
+    //             language: 'en-US',
+    //             year: year
+    //         },
+    //         headers: {
+    //             accept: 'application/json',
+    //             Authorization: `Bearer ${process.env.REACT_APP_TMDB_API_KEY}`
+    //         }
+    //     };
+    //
+    //     const token = localStorage.getItem("site");
+    //
+    //     try {
+    //         const res = await limiter.schedule(() => axios.request(options));
+    //         const movie = res.data.results?.[0];
+    //         const poster = movie ? movie.poster_path : null;
+    //
+    //         const response = await fetch(
+    //             `${process.env.REACT_APP_BACKEND_BASE_URL}/titles/${film.id}`,
+    //             {
+    //                 method: "PUT",
+    //                 headers: {
+    //                     "Content-Type": "application/json",
+    //                     "Authorization": `Bearer ${token}`
+    //                 },
+    //                 credentials: "include",
+    //                 body: JSON.stringify({
+    //                     ...film,
+    //                     imageUrl: poster,
+    //                 }),
+    //             }
+    //         );
+    //
+    //         if (!response.ok) {
+    //             const errText = await response.text();
+    //             throw new Error(errText || "Failed to update film");
+    //         }
+    //     } catch (err) {
+    //         console.error("Error fetching", title, err.message);
+    //         return null;
+    //     }
+    // }
+    //
+    // const updatePostersForCurrentPage = async () => {
+    //     setUpdatingPosters(true);
+    //     // setPosterError(null);
+    //
+    //     for (const film of currentFilms) {
+    //         if (!film.imageUrl) {
+    //             await fetchPosterForFilm(film);
+    //         }
+    //     }
+    //
+    //     await loadFilms();
+    //     setUpdatingPosters(false);
+    //
+    //     const totalPages = Math.ceil(filteredFilms.length / filmsPerPage);
+    //     if (currentPage < totalPages) {
+    //         setCurrentPage(currentPage + 1);
+    //     }
+    // };
+    //
+    // useEffect(() => {
+    //     if (!loading && currentFilms.length > 0) {
+    //         updatePostersForCurrentPage();
+    //     }
+    // }, [loading, currentPage]);
+
+    const confirmDelete = (film) => {
+        setFilmToDelete(film);
+        setShowConfirm(true);
+    };
+
+    const deleteFilm = async () => {
+        if (!filmToDelete) return;
+
+        try {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/titles/${filmToDelete.id}`, {
+                method: "DELETE",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                }
+            });
+
+            if (response.ok) {
+                setFilms(films.filter((f) => f.id !== filmToDelete.id));
+            } else {
+                console.error("Error while deleting the film with id " + filmToDelete.id);
+            }
+        } catch (error) {
+            console.error("Error while deleting film:", error);
+        } finally {
+            setShowConfirm(false);
+            setFilmToDelete(null);
+        }
+    };
+
     return (
         <div className="container py-5">
             <h2 className="mb-4 text-center">Films management page</h2>
+
+            {updatingPosters && (
+                <div className="alert alert-info text-center">
+                    Updating posters for page {currentPage}...
+                </div>
+            )}
+
 
             <div className="search-wrapper mb-4 d-flex flex-column flex-md-row align-items-md-center gap-2">
                 <div className="position-relative flex-grow-1">
@@ -132,6 +257,16 @@ export default function FilmsPageManager() {
                                     alt={film.titleName}
                                     style={{ height: "350px", objectFit: "cover" }}
                                 />
+                                <Button
+                                    variant="outline-danger"
+                                    size="sm"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        confirmDelete(film);
+                                    }}
+                                >
+                                    🗑 Delete
+                                </Button>
                                 <Card.Body>
                                     <Card.Title className="text-truncate">{film.titleName}</Card.Title>
                                     <Card.Text className="text-muted mb-1">
@@ -220,6 +355,24 @@ export default function FilmsPageManager() {
 
 
             )}
+
+            <Modal show={showConfirm} onHide={() => setShowConfirm(false)} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>Confirm Deletion</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    Are you sure you want to delete{" "}
+                    <strong>{filmToDelete?.title}</strong>?
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowConfirm(false)}>
+                        Cancel
+                    </Button>
+                    <Button variant="danger" onClick={deleteFilm}>
+                        Delete
+                    </Button>
+                </Modal.Footer>
+            </Modal>
 
             <Modal show={!!selectedFilm} onHide={handleClose} centered size="lg">
                 {selectedFilm && (

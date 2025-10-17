@@ -70,9 +70,23 @@ export default function UpdateUser() {
         }
 
         try {
-            await api.put(`/users/${id}`, user);
-            alert("User updated successfully!");
-            navigate("/admin-page/users");
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/users/${id}`, {
+                method: "PUT",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                },
+                body: JSON.stringify(user)
+            });
+
+            if (response.ok) {
+                alert("User updated successfully!");
+                navigate("/admin-page/users");
+            } else {
+                console.error("Error while updating the user " + id);
+            }
+
         } catch (err) {
             console.error("Error updating user:", err);
             alert("Failed to update user");

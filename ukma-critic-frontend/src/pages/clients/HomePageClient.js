@@ -68,12 +68,29 @@ export default function HomePageClient() {
         }
     });
 
-    const toggleFavorite = (filmId) => {
-        // !to_change here add "add to favourite" logic from database
-        if (favorites.includes(filmId)) {
-            setFavorites(favorites.filter((id) => id !== filmId));
-        } else {
-            setFavorites([...favorites, filmId]);
+    const toggleFavorite = async (filmId) => {
+        const token = localStorage.getItem("site");
+        try {
+            if (favorites.includes(filmId)) {
+                setFavorites(favorites.filter((id) => id !== filmId));
+                await fetch(`/favs/${filmId}`, {
+                    method: "DELETE",
+                    credentials: "include",
+                });
+            } else {
+                setFavorites([...favorites, filmId]);
+                await fetch(`/favs`, {
+                    method: "POST",
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify({filmId}),
+                });
+            }
+        } catch (err) {
+            console.error("Error while updating favourites", err);
         }
     };
 
@@ -152,7 +169,10 @@ export default function HomePageClient() {
                                         className={`btn btn-sm position-absolute top-0 end-0 m-2 ${
                                             favorites.includes(film.id) ? "btn-danger" : "btn-outline-danger"
                                         }`}
-                                        onClick={() => toggleFavorite(film.id)}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            toggleFavorite(film.id);
+                                        }}
                                         title={favorites.includes(film.id) ? "Delete from favorites" : "Add to favourites"}
                                     >
                                         ❤️

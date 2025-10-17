@@ -28,9 +28,22 @@ export default function UsersPage() {
         }
 
         try {
-            await api.delete(`/users/${id}`);
-            await loadUsers();
-            showMessage(`User ${name} was deleted`, "success");
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/users/${id}`, {
+                method: "DELETE",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                }
+            });
+
+            if (response.ok) {
+                await loadUsers();
+                showMessage(`User ${name} was deleted`, "success");
+            } else {
+                console.error("Error while deleting the user " + name);
+            }
+
         } catch (err) {
             console.error("Failed to delete user:", err);
             showMessage(`Failed to delete user ${name}`, "danger");

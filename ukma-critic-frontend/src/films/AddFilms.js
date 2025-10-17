@@ -48,7 +48,7 @@ export default function AddFilms() {
             console.log(film);
 
             const response = await fetch(
-                `${process.env.REACT_APP_BACKEND_BASE_URL}/titles/`,
+                `${process.env.REACT_APP_BACKEND_BASE_URL}/titles`,
                 {
                     method: "POST",
                     headers: {
@@ -61,12 +61,13 @@ export default function AddFilms() {
                         genres: film.genres,
                         releaseYear: film.releaseYear,
                         rating: film.rating,
-                        directors: film.directors,
+                        director: film.director,
                         actors: film.actors,
-                        tmdb_image_url: film.posterPath,
-                        tmdb: film.idTmdb,
+                        imageUrl: film.posterPath,
+                        // tmdb: film.idTmdb,
                         overview: film.overview,
-                        regions: film.regions
+                        keywords: null
+                        // regions: film.regions
                     }),
                 }
             );
@@ -120,7 +121,7 @@ export default function AddFilms() {
             );
             const details = detailsRes.data;
 
-            const directors = credits.crew
+            const director = credits.crew
                 .filter((c) => c.job === "Director")
                 .map((d) => d.name);
 
@@ -128,18 +129,19 @@ export default function AddFilms() {
             const genres = details.genres.map((g) => g.name);
 
             const filmData = {
-                directors,
+                director,
                 genres,
                 actors,
-                regions: details.origin_country,
+                // regions: details.origin_country,
                 titleName: film.title,
                 overview: film.overview,
                 releaseYear: film.release_date
                     ? parseInt(film.release_date.split("-")[0])
                     : null,
                 rating: Math.round(film.vote_average),
-                idTmdb: film.id,
-                posterPath: film.poster_path
+                // idTmdb: film.id,
+                posterPath: film.poster_path,
+                keywords: film.keywords
             };
 
             setSelectedFilm(filmData);
@@ -274,7 +276,7 @@ export default function AddFilms() {
                                             <h4 className="fw-bold mb-3">{selectedFilm.titleName}</h4>
                                             <p>
                                                 <strong>Directors:</strong>{" "}
-                                                {selectedFilm.directors.join(", ") || "—"}
+                                                {selectedFilm.director.join(", ") || "—"}
                                             </p>
                                             <div className="mt-3">
                                                 <strong>Actors:</strong>
@@ -289,10 +291,10 @@ export default function AddFilms() {
                                                 <strong>Genres:</strong>{" "}
                                                 {selectedFilm.genres.join(", ") || "—"}
                                             </p>
-                                            <p>
-                                                <strong>Regions:</strong>{" "}
-                                                {selectedFilm.regions.join(", ") || "—"}
-                                            </p>
+                                            {/*<p>*/}
+                                            {/*    <strong>Regions:</strong>{" "}*/}
+                                            {/*    {selectedFilm.regions.join(", ") || "—"}*/}
+                                            {/*</p>*/}
                                             <p>
                                                 <strong>Release year:</strong> {selectedFilm.releaseYear}
                                             </p>
