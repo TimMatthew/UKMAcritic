@@ -70,23 +70,27 @@ export default function HomePageClient() {
 
     const toggleFavorite = async (filmId) => {
         const token = localStorage.getItem("site");
+
         try {
             if (favorites.includes(filmId)) {
                 setFavorites(favorites.filter((id) => id !== filmId));
-                await fetch(`/favs/${filmId}`, {
+                await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/favs/${filmId}`, {
                     method: "DELETE",
                     credentials: "include",
                 });
             } else {
                 setFavorites([...favorites, filmId]);
-                await fetch(`/favs`, {
+                await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/favs`, {
                     method: "POST",
                     credentials: "include",
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${token}`
                     },
-                    body: JSON.stringify({filmId}),
+                    body: JSON.stringify({
+                        titleId: filmId,
+                        userId: JSON.parse(localStorage.getItem("user")).userId,
+                    }),
                 });
             }
         } catch (err) {

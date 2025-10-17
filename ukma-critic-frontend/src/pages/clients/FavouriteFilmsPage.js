@@ -1,22 +1,41 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, Spinner } from "react-bootstrap";
+import api from "../../api/AxiosConfig";
 
 export default function FavouriteFilmsPage() {
     const [favorites, setFavorites] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    const [films, setFilms] = useState([]);
+
     const navigate = useNavigate();
     const user = JSON.parse(localStorage.getItem("user"));
 
     useEffect(() => {
+        loadFilms();
+    }, []);
+
+    const loadFilms = async () => {
+        try {
+            const response = await api.get("/titles");
+            setFilms(response.data);
+            setLoading(false);
+        } catch (err) {
+            console.error("Failed to load films", err);
+        }
+    };
+
+    useEffect(() => {
         const fetchFavorites = async () => {
             try {
-                const response = await fetch(`/favs/${user.id}`, {
+                const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/favs/${user.userId}`, {
                     credentials: "include",
                 });
                 if (response.ok) {
                     const data = await response.json();
                     setFavorites(data);
+                    console.log(data);
                 } else {
                     console.error("Error fetching favorites");
                 }
@@ -28,7 +47,7 @@ export default function FavouriteFilmsPage() {
         };
 
         fetchFavorites();
-    }, []);
+    }, [user.userId]);
 
     if (loading) {
         return (
@@ -40,18 +59,36 @@ export default function FavouriteFilmsPage() {
         );
     }
 
+    const favouriteFilms = films.filter(film =>
+        favorites.some(fav => fav.titleId === film.id)
+    );
+
+    if (loading) {
+        return (
+            <div className="d-flex justify-content-center align-items-center vh-100">
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </Spinner>
+            </div>
+        );
+    }
+
+    console.log(films);
+
     return (
         <div className="container py-5">
             <h2 className="text-center mb-4 fw-bold text-danger">❤️ Favourite Films</h2>
 
-            {favorites.length === 0 ? (
+            {favouriteFilms.length === 0 ? (
                 <div className="text-center mt-5">
                     <h5 className="text-muted">You haven’t added any favourite films yet.</h5>
-                    <p className="text-secondary">Explore films and click the ❤️ icon to save them!</p>
+                    <p className="text-secondary">
+                        Explore films and click the ❤️ icon to save them!
+                    </p>
                 </div>
             ) : (
                 <div className="row g-4">
-                    {favorites.map((film) => (
+                    {favouriteFilms.map((film) => (
                         <div className="col-sm-6 col-md-4 col-lg-3" key={film.id}>
                             <Card
                                 className="shadow-sm h-100 position-relative film-card"
@@ -60,12 +97,14 @@ export default function FavouriteFilmsPage() {
                             >
                                 <Card.Img
                                     variant="top"
-                                    src={film.posterUrl || "/default-poster.jpg"}
-                                    alt={film.title}
+                                    src={film.imageUrl ?
+                                        `https://image.tmdb.org/t/p/w500${film.imageUrl}` :
+                                        '/images/placeholder.png'}
+                                    alt={film.titleName}
                                     className="film-poster"
                                 />
                                 <Card.Body>
-                                    <Card.Title className="fw-semibold text-center">{film.title}</Card.Title>
+                                    <Card.Title className="fw-semibold text-center">{film.titleName}</Card.Title>
                                 </Card.Body>
                             </Card>
                         </div>
