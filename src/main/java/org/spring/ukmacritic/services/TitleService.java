@@ -113,6 +113,7 @@ public class TitleService {
         return TitleResponseDto.builder()
                 .id(t.getTitleId())
                 .titleName(t.getTitleName())
+                .tmdbId(t.getTmdbId())
                 .overview(t.getOverview())
                 .keywords(t.getKeywords())
                 .genres(t.getGenres())

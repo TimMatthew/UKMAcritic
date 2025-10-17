@@ -8,6 +8,7 @@ import java.util.UUID;
 @Builder
 public record TitleResponseDto(
         UUID id,
+        String tmdbId,
         String titleName,
         String overview,
         List<String> keywords,
