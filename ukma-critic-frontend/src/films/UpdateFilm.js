@@ -19,6 +19,7 @@ export default function UpdateFilm() {
         loadFilm();
     }, [id]);
 
+
     const loadFilm = async () => {
         try {
             const response = await api.get(`/titles/${id}`);
@@ -49,9 +50,8 @@ export default function UpdateFilm() {
 
     const onSubmit = async (e) => {
         e.preventDefault();
-        if (!validate()) {
-            return;
-        }
+        if (!validate()) return;
+
         try {
             const token = localStorage.getItem("site");
 

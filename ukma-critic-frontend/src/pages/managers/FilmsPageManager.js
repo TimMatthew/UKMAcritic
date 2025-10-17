@@ -15,6 +15,7 @@ export default function FilmsPageManager() {
     const filmsPerPage = 12;
 
     const [search, setSearch] = useState("");
+    const [searchField, setSearchField] = useState("title");
 
     useEffect(() => {
         loadFilms();
@@ -28,7 +29,6 @@ export default function FilmsPageManager() {
         try {
             const response = await api.get("/titles");
             setFilms(response.data);
-            console.log(response.data)
             setLoading(false);
         } catch (err) {
             console.error(err);
@@ -36,10 +36,28 @@ export default function FilmsPageManager() {
     };
 
     const filteredFilms = films.filter((film) => {
-        const matchesTitle = film.titleName
-            .toLowerCase()
-            .includes(search.toLowerCase());
-        return matchesTitle;
+        const query = search.toLowerCase().split(' ').join('');
+
+        if (!search.trim()) return true;
+
+        switch (searchField) {
+            case "title":
+                return film.titleName?.toLowerCase().includes(query);
+            case "actors":
+                return film.actors?.some((actor) =>
+                    actor.toLowerCase().includes(query)
+                );
+            case "genres":
+                return film.genres?.some((genre) =>
+                    genre.toLowerCase().includes(query)
+                );
+            case "directors":
+                return film.director?.some((dir) =>
+                    dir.toLowerCase().includes(query)
+                );
+            default:
+                return false;
+        }
     });
 
     const indexOfLastFilm = currentPage * filmsPerPage;
@@ -54,16 +72,31 @@ export default function FilmsPageManager() {
         <div className="container py-5">
             <h2 className="mb-4 text-center">Films management page</h2>
 
-            <div className="search-wrapper mb-4">
-                <i className="bi bi-search search-icon"></i>
-                <input
-                    type="text"
-                    className="search-input"
-                    placeholder="Search films..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                />
+            <div className="search-wrapper mb-4 d-flex flex-column flex-md-row align-items-md-center gap-2">
+                <div className="position-relative flex-grow-1">
+                    <i className="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                    <input
+                        type="text"
+                        className="form-control ps-5"
+                        placeholder={`Search by ${searchField}...`}
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
+                </div>
+
+                <select
+                    className="form-select"
+                    style={{ maxWidth: "180px" }}
+                    value={searchField}
+                    onChange={(e) => setSearchField(e.target.value)}
+                >
+                    <option value="title">Title</option>
+                    <option value="actors">Actors</option>
+                    <option value="genres">Genres</option>
+                    <option value="directors">Directors</option>
+                </select>
             </div>
+
 
             <div style={{display: 'flex', margin: '20px', justifyContent: 'center'}}>
                 <Link type="button" to={`/admin-page/films/add`}
