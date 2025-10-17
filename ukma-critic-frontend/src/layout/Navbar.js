@@ -36,7 +36,7 @@ export default function Navbar() {
 
                     {role === "client" && (
                         <li className="nav-item">
-                            <Link className="nav-link" to="/user-page/favourite-films">Favourite films</Link>
+                            <Link className="nav-link" to={`/user-page/films/favourite`}>Favourite films</Link>
                         </li>
                     )}
 

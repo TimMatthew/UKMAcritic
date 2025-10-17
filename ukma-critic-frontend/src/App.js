@@ -15,11 +15,13 @@ import RegisterPage from "./pages/RegisterPage";
 import {CookiesProvider} from "react-cookie";
 import HomePageManager from "./pages/managers/HomePageManager";
 import HomePageClient from "./pages/clients/HomePageClient";
-import HomePage from "./pages/HomePage";
 import FilmsPageManager from "./pages/managers/FilmsPageManager";
 import FilmInfoPageClient from "./pages/clients/FilmInfoPageClient";
 import ModerateUsersCommentsPage from "./pages/managers/ModerateUsersCommentsPage";
 import AllReviewsPage from "./pages/managers/AllReviewsPage";
+import ProfilePageClient from "./pages/clients/ProfilePageClient";
+import FavouriteFilmsPage from "./pages/clients/FavouriteFilmsPage";
+import HomeRedirect from "./context/HomeRedirect";
 
 
 function App() {
@@ -32,14 +34,7 @@ function App() {
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/register" element={<RegisterPage />} />
 
-                    <Route
-                        path="/"
-                        element={
-                            <ProtectedRoute>
-                                <HomePage />
-                            </ProtectedRoute>
-                        }
-                    />
+                    <Route path="/" element={<HomeRedirect />} />
 
                     {/* manager */}
 
@@ -150,6 +145,24 @@ function App() {
                         element={
                             <ProtectedRoute>
                                 <FilmInfoPageClient />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/user-page/profile/"
+                        element={
+                            <ProtectedRoute>
+                                <ProfilePageClient />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/user-page/films/favourite/"
+                        element={
+                            <ProtectedRoute>
+                                <FavouriteFilmsPage />
                             </ProtectedRoute>
                         }
                     />

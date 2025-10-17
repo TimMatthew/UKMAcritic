@@ -4,6 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import { Modal } from "bootstrap";
 import "./AddFilms.css";
+import ReadMore from "./ReadMore";
 
 export default function AddFilms() {
     const [films, setFilms] = useState([]);
@@ -169,30 +170,6 @@ export default function AddFilms() {
             </div>
         );
     }
-
-
-    function ReadMore({ text, maxLength = 200 }) {
-        const [expanded, setExpanded] = React.useState(false);
-
-        if (text.length <= maxLength) {
-            return <p>{text}</p>;
-        }
-
-        const shortText = text.substring(0, maxLength) + "...";
-
-        return (
-            <p>
-                {expanded ? text : shortText}{" "}
-                <button
-                    onClick={() => setExpanded(!expanded)}
-                    className="btn btn-link p-0 m-0 align-baseline text-decoration-none"
-                >
-                    {expanded ? "Read less" : "Read more"}
-                </button>
-            </p>
-        );
-    }
-
 
     return (
         <div className="container py-5">
